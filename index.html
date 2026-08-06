@@ -1,0 +1,2906 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Soltar</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>Soltar</h1>
+    <p>Tu espacio personal para liberar</p>
+  </header>
+
+  <div id="backBar" class="back-bar hidden">
+    <button type="button" class="back-button" data-action="back">
+      ← Volver
+    </button>
+    <button type="button" class="back-button" data-action="abrir-pasos" style="margin-left:auto;">
+      Seis Pasos
+    </button>
+  </div>
+
+  <main>
+    <!-- INICIO -->
+    <section id="view-inicio" class="view active">
+      <div class="card">
+        <h2>Empezar</h2>
+        <p>
+          Esta versión incluye liberación básica, diario, beneficios
+          y biblioteca de técnicas.
+        </p>
+
+        <button class="button" data-view="liberar">Liberar ahora</button>
+        <button class="button secondary" data-view="tecnicas">Ver técnicas</button>
+        <button class="button secondary" data-view="beneficios">Registrar beneficio</button>
+        <button class="button secondary" data-view="diario">Ver diario</button>
+        <button class="button ghost" data-view="ajustes">Ajustes</button>
+        <button class="button ghost" id="exportarDatos">Exportar datos</button>
+      </div>
+
+      <div class="card">
+        <h2>Cita del día</h2>
+        <p class="cita-texto" id="citaDelDia"></p>
+        <p class="small">Ideas del método, en tus palabras.</p>
+      </div>
+
+      <div class="card">
+        <h2>Nota</h2>
+        <p>
+          Esta app es privada y local. Los datos se guardan en este navegador.
+          Si borrás los datos del navegador, se borran las sesiones.
+          Por eso conviene exportar cada tanto.
+        </p>
+      </div>
+    </section>
+
+    <!-- LIBERAR -->
+    <section id="view-liberar" class="view">
+      <form id="formSesion" class="card">
+        <h2>Liberación básica</h2>
+
+        <label>
+          Tema
+          <select id="tema"></select>
+        </label>
+
+        <label>
+          ¿Qué está pasando?
+          <textarea id="descripcion" placeholder="Escribe brevemente la situación..."></textarea>
+        </label>
+
+        <label>
+          Emoción inicial
+          <select id="emocionInicial"></select>
+        </label>
+
+        <label>
+          Intensidad inicial: <strong id="intensidadInicialTexto">5</strong>/10
+          <input type="range" id="intensidadInicial" min="0" max="10" value="5" />
+        </label>
+
+        <div class="mini-card">
+          <strong>Preguntas guía</strong>
+          <ol>
+            <li>¿Puedo aceptar este sentimiento?</li>
+            <li>¿Podría soltarlo?</li>
+            <li>¿Lo soltaría?</li>
+            <li>¿Cuándo?</li>
+          </ol>
+          <p>
+            Respondé con honestidad: sí, no, un poco, todavía no.
+          </p>
+        </div>
+
+        <label>
+          Posible necesidad
+          <select id="necesidad"></select>
+        </label>
+
+        <label>
+          Emoción final
+          <select id="emocionFinal"></select>
+        </label>
+
+        <label>
+          Intensidad final: <strong id="intensidadFinalTexto">5</strong>/10
+          <input type="range" id="intensidadFinal" min="0" max="10" value="5" />
+        </label>
+
+        <label>
+          Beneficio observado
+          <input id="beneficioSesion" placeholder="Ej: me siento más tranquilo" />
+        </label>
+
+        <button type="submit" class="button">Guardar sesión</button>
+      </form>
+    </section>
+
+    <!-- TECNICAS -->
+    <section id="view-tecnicas" class="view">
+      <div class="card">
+        <h2>Biblioteca de técnicas</h2>
+        <p>
+          Elegí una técnica para ver su descripción, pasos y preguntas.
+        </p>
+
+        <div id="listaTecnicas"></div>
+      </div>
+    </section>
+
+    <!-- DETALLE DE TECNICA -->
+    <section id="view-tecnica-detalle" class="view">
+      <div id="detalleTecnica"></div>
+    </section>
+
+    <!-- EJERCICIO DE DOS COLUMNAS -->
+    <section id="view-ejercicio-columnas" class="view">
+      <div class="card">
+        <h2 id="ejercicioTitulo"></h2>
+        <p id="ejercicioDescripcion"></p>
+
+        <label>
+          Tema
+          <input id="ejercicioTema" placeholder="Ej: mi trabajo, mi pareja, el dinero..." />
+        </label>
+      </div>
+
+      <div class="columns">
+        <div class="card column-card">
+          <h3 id="columnaIzqTitulo"></h3>
+          <div class="add-row">
+            <input id="columnaIzqInput" />
+            <button type="button" data-action="agregar-entrada" data-lado="izquierda">+</button>
+          </div>
+          <div id="listaIzquierda"></div>
+        </div>
+
+        <div class="card column-card">
+          <h3 id="columnaDerTitulo"></h3>
+          <div class="add-row">
+            <input id="columnaDerInput" />
+            <button type="button" data-action="agregar-entrada" data-lado="derecha">+</button>
+          </div>
+          <div id="listaDerecha"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="small">
+          Los cambios se guardan automáticamente en este navegador.
+        </p>
+        <button type="button" class="button ghost" data-action="reiniciar-ejercicio">
+          Reiniciar ejercicio
+        </button>
+      </div>
+    </section>
+
+    <!-- EJERCICIO DE LIMPIEZA -->
+    <section id="view-ejercicio-limpieza" class="view">
+      <div class="card">
+        <h2>Procedimiento de Limpieza</h2>
+        <p>
+          Piensa en una persona con la que quieras limpiar sentimientos pendientes.
+          Responde cada serie de preguntas liberando lo que surja, hasta llegar a un
+          "sí" sincero en la última pregunta de cada fase.
+        </p>
+
+        <label>
+          Persona sobre la que limpiar
+          <input id="limpiezaPersona" placeholder="Nombre o descripción de la persona..." />
+        </label>
+      </div>
+
+      <div id="limpiezaFases"></div>
+
+      <div class="card">
+        <h3>Notas finales</h3>
+        <p class="small">
+          Cómo te sentís ahora con esta persona después de completar el procedimiento.
+        </p>
+        <textarea id="limpiezaNotasFinales" placeholder="Ej: siento aceptación, cariño, paz..."></textarea>
+
+        <p class="small" style="margin-top: 12px;">
+          Los cambios se guardan automáticamente en este navegador.
+        </p>
+        <button type="button" class="button ghost" data-action="reiniciar-limpieza">
+          Reiniciar limpieza
+        </button>
+      </div>
+    </section>
+
+    <!-- EJERCICIO DE CULPA Y VERGÜENZA -->
+    <section id="view-ejercicio-culpa" class="view">
+      <div class="card">
+        <h2 id="culpaTitulo">Culpa y vergüenza</h2>
+        <p id="culpaDescripcion"></p>
+      </div>
+
+      <div class="card">
+        <h3>1. Identificar la situación</h3>
+        <label>
+          ¿De qué te sentís culpable o avergonzado?
+          <textarea id="culpaSituacionInput" placeholder="Describí brevemente la situación o lo que hiciste/pensaste..."></textarea>
+        </label>
+
+        <p class="miedo-pregunta">
+          ¿Qué sentís principalmente?
+        </p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-culpa-tipo="culpa">Culpa ("hice algo malo")</button>
+          <button type="button" class="button small secondary" data-culpa-tipo="verguenza">Vergüenza ("soy malo")</button>
+          <button type="button" class="button small secondary" data-culpa-tipo="ambas">Ambas</button>
+        </div>
+
+        <label style="margin-top: 16px;">
+          Intensidad actual: <strong id="culpaIntensidadInicialTexto">5</strong>/10
+          <input type="range" id="culpaIntensidadInicial" min="0" max="10" value="5" />
+        </label>
+      </div>
+
+      <div class="card">
+        <h3>2. ¿Para qué estás usando esta culpa?</h3>
+        <div class="mini-card">
+          <p>
+            A veces usamos la culpa o la vergüenza para conseguir aprobación, control o
+            seguridad. La culpa se vuelve un "Te debo" inconsciente que atrae más castigo.
+          </p>
+        </div>
+        <p class="miedo-pregunta">
+          ¿Estás usando esta culpa/vergüenza para conseguir...?
+        </p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-culpa-usando="aprobacion">Aprobación</button>
+          <button type="button" class="button small secondary" data-culpa-usando="control">Control</button>
+          <button type="button" class="button small secondary" data-culpa-usando="seguridad">Seguridad</button>
+          <button type="button" class="button small secondary" data-culpa-usando="ninguna">Ninguna / no lo sé</button>
+        </div>
+
+        <p class="miedo-pregunta" style="margin-top: 16px;">
+          ¿Podrías soltar el deseo detrás de esta culpa?
+        </p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-culpa-soltaria-nec="si">Sí, puedo</button>
+          <button type="button" class="button small secondary" data-culpa-soltaria-nec="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-culpa-soltaria-nec="todavia_no">Todavía no</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>3. El autocastigo</h3>
+        <div class="mini-card">
+          <p>
+            <strong>Idea clave:</strong> La culpa promete evitar el castigo exterior, pero
+            en realidad atrae el castigo: te lo aplicas tú mismo, y muchas veces lo
+            exageras sin saber cuándo parar.
+          </p>
+        </div>
+        <p class="miedo-pregunta">
+          ¿Ya te has castigado suficiente por esto?
+        </p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-culpa-castigado="si">Sí, ya fue suficiente</button>
+          <button type="button" class="button small secondary" data-culpa-castigado="no">No, aún no</button>
+          <button type="button" class="button small secondary" data-culpa-castigado="todavia_no">No lo sé</button>
+        </div>
+
+        <p class="miedo-pregunta" style="margin-top: 16px;">
+          ¿Podrías permitirte decidir dejar de castigarte?
+        </p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-culpa-decidiria="si">Sí, puedo decidirlo</button>
+          <button type="button" class="button small secondary" data-culpa-decidiria="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-culpa-decidiria="todavia_no">Todavía no</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>4. Ventajas e inconvenientes de castigarte</h3>
+        <p class="small">
+          Descubrí qué ganas con el autocastigo y qué te cuesta. Para cada elemento,
+          identificá la necesidad subyacente y liberá.
+        </p>
+
+        <div class="columns">
+          <div class="column-card" style="padding: 0;">
+            <h4 style="margin: 0 0 12px 0;">Ventajas de castigarme</h4>
+            <div class="add-row">
+              <input id="culpaVentajaInput" placeholder="Ej: evita que lo haga de nuevo, me siento justo..." />
+              <button type="button" data-action="culpa-agregar-ventaja">+</button>
+            </div>
+            <div id="culpaVentajasLista"></div>
+          </div>
+
+          <div class="column-card" style="padding: 0;">
+            <h4 style="margin: 0 0 12px 0;">Inconvenientes de castigarme</h4>
+            <div class="add-row">
+              <input id="culpaInconvenienteInput" placeholder="Ej: me agota, me bloquea, me hace repetir..." />
+              <button type="button" data-action="culpa-agregar-inconveniente">+</button>
+            </div>
+            <div id="culpaInconvenientesLista"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>5. Aceptar los verdaderos sentimientos</h3>
+        <div class="mini-card">
+          <p>
+            A veces sentimos culpa "oficial" pero en secreto pensamos:
+            "Lo hice. Estoy contento de haberlo hecho. Y lo haría de nuevo".
+            Reconocer la verdad libera gran parte de la culpa.
+          </p>
+        </div>
+        <p class="miedo-pregunta">
+          En secreto, ¿te alegra haberlo hecho o lo harías de nuevo?
+        </p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-culpa-secreto="si">Sí, en parte</button>
+          <button type="button" class="button small secondary" data-culpa-secreto="en_parte">En parte sí, en parte no</button>
+          <button type="button" class="button small secondary" data-culpa-secreto="no">No, no me alegra</button>
+        </div>
+
+        <p class="miedo-pregunta" style="margin-top: 16px;">
+          ¿Podrías soltar el deseo de hacerlo de nuevo (si aplica)?
+        </p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-culpa-soltaria-repetir="si">Sí, puedo soltarlo</button>
+          <button type="button" class="button small secondary" data-culpa-soltaria-repetir="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-culpa-soltaria-repetir="todavia_no">Todavía no</button>
+          <button type="button" class="button small secondary" data-culpa-soltaria-repetir="no_aplica">No aplica</button>
+        </div>
+
+        <label style="margin-top: 16px;">
+          Aprendizaje o aceptación (opcional)
+          <textarea id="culpaNotasAprendizaje" placeholder="¿Qué aprendiste de lo ocurrido? ¿Cómo podés aceptarlo y seguir adelante?"></textarea>
+        </label>
+      </div>
+
+      <div class="card">
+        <h3>6. Medir el cambio</h3>
+        <label>
+          Intensidad ahora: <strong id="culpaIntensidadFinalTexto">5</strong>/10
+          <input type="range" id="culpaIntensidadFinal" min="0" max="10" value="5" />
+        </label>
+
+        <label>
+          Beneficio o cambio notado
+          <input id="culpaBeneficioInput" placeholder="Ej: me siento más ligero, acepto lo ocurrido, dejo de castigarme..." />
+        </label>
+      </div>
+
+      <div class="card">
+        <button type="button" class="button" data-action="guardar-culpa-diario">
+          Guardar en el diario
+        </button>
+        <button type="button" class="button ghost" data-action="reiniciar-culpa">
+          Reiniciar ejercicio
+        </button>
+        <p class="small" style="margin-top: 12px;">
+          Los cambios se guardan automáticamente en este navegador.
+        </p>
+      </div>
+    </section>
+
+    <!-- EJERCICIO DE MIEDO -->
+    <section id="view-ejercicio-miedo" class="view">
+      <div class="card">
+        <h2 id="miedoTitulo">Liberación del miedo</h2>
+        <p id="miedoDescripcion">
+          Identifica lo que temes que ocurra y suelta la expectativa de que suceda.
+          A veces, sin darnos cuenta, mantenemos en la mente aquello que tememos.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>1. Identifica tu miedo</h3>
+        <label>
+          ¿Qué te da miedo o ansiedad?
+          <input id="miedoInput" placeholder="Ej: hablar en público, perder mi trabajo, enfermar..." />
+        </label>
+
+        <label>
+          ¿Qué es exactamente lo que temes que ocurra?
+          <textarea id="queTemoInput" placeholder="Describe lo más específico posible: ¿qué temes que pase exactamente?"></textarea>
+        </label>
+
+        <label>
+          Intensidad actual: <strong id="miedoIntensidadInicialTexto">5</strong>/10
+          <input type="range" id="miedoIntensidadInicial" min="0" max="10" value="5" />
+        </label>
+      </div>
+
+      <div class="card">
+        <h3>2. Aceptación</h3>
+        <p class="miedo-pregunta">
+          ¿Puedes aceptar este miedo tal como es ahora, sin pelear con él?
+        </p>
+        <div class="choice-group" id="miedoAceptadoGroup">
+          <button type="button" class="button small" data-miedo-aceptado="si">Sí</button>
+          <button type="button" class="button small secondary" data-miedo-aceptado="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-miedo-aceptado="todavia_no">Todavía no</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>3. Soltar la expectativa</h3>
+        <div class="mini-card">
+          <p>
+            <strong>Idea clave:</strong> A veces, sin darnos cuenta, mantenemos en la mente
+            aquello que tememos. Soltar el deseo de que eso ocurra libera el miedo.
+          </p>
+        </div>
+        <p class="miedo-pregunta">
+          ¿Podrías soltar la expectativa/deseo de que eso ocurra?
+        </p>
+        <div class="choice-group" id="miedoSoltariaGroup">
+          <button type="button" class="button small" data-miedo-soltaria="si">Sí, puedo</button>
+          <button type="button" class="button small secondary" data-miedo-soltaria="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-miedo-soltaria="todavia_no">Todavía no</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>4. Elegir una imagen mejor</h3>
+        <p class="miedo-pregunta">
+          ¿Qué prefieres mantener en la mente?
+        </p>
+        <div class="choice-group" style="flex-direction: column; gap: 8px;">
+          <button type="button" class="button secondary" disabled>
+            Lo que temo que ocurra
+          </button>
+          <button type="button" class="button" disabled>
+            Una posibilidad mejor y más constructiva
+          </button>
+        </div>
+
+        <label style="margin-top: 16px;">
+          ¿Cuál es la imagen alternativa o más constructiva que prefieres?
+          <textarea id="miedoImagenInput" placeholder="Describe cómo te gustaría que fuera en lugar de lo que temes..."></textarea>
+        </label>
+      </div>
+
+      <div class="card">
+        <h3>5. Medir el cambio</h3>
+        <label>
+          Intensidad ahora: <strong id="miedoIntensidadFinalTexto">5</strong>/10
+          <input type="range" id="miedoIntensidadFinal" min="0" max="10" value="5" />
+        </label>
+
+        <label>
+          Beneficio o cambio notado
+          <input id="miedoBeneficioInput" placeholder="Ej: me siento más tranquilo, veo posibilidades..." />
+        </label>
+      </div>
+
+      <div class="card">
+        <button type="button" class="button" data-action="guardar-miedo-diario">
+          Guardar en el diario
+        </button>
+        <button type="button" class="button ghost" data-action="reiniciar-miedo">
+          Reiniciar ejercicio
+        </button>
+        <p class="small" style="margin-top: 12px;">
+          Los cambios se guardan automáticamente en este navegador.
+        </p>
+      </div>
+    </section>
+
+    <!-- EJERCICIO DE RESISTENCIA -->
+    <section id="view-ejercicio-resistencia" class="view">
+      <div class="card">
+        <h2>Liberar la Resistencia</h2>
+        <p>
+          La resistencia es como querer avanzar pisando el freno. Surge cada vez que pensamos que "tenemos que" o "deberíamos" hacer algo.
+        </p>
+        <label>
+          Intensidad inicial de la resistencia: <strong id="resistenciaIntensidadInicialTexto">5</strong>/10
+          <input type="range" id="resistenciaIntensidadInicial" min="0" max="10" value="5" />
+        </label>
+      </div>
+
+      <div class="card">
+        <h3>1. Cosas que creo que tengo que hacer</h3>
+        <p class="small">Anota aquello que sientes que "debes" o "tienes que" hacer, y qué sientes al respecto.</p>
+        <div class="add-row">
+          <input id="resistenciaTareaInput" placeholder="Ej: Pagar las facturas, limpiar..." />
+          <button type="button" data-action="resistencia-agregar-tarea">+</button>
+        </div>
+        <div id="resistenciaTareasLista"></div>
+      </div>
+
+      <div class="card">
+        <h3>2. Resistencia a hacer y a no hacer</h3>
+        <label>
+          Piensa en algo específico a lo que te resistes hacer ahora mismo:
+          <input id="resistenciaHacerInput" placeholder="¿A qué te resistes?" />
+        </label>
+
+        <p class="miedo-pregunta" style="margin-top: 16px;">
+          ¿Podrías permitirte soltar tu resistencia a hacerlo?
+        </p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-resistencia-soltaria-hacer="si">Sí</button>
+          <button type="button" class="button small secondary" data-resistencia-soltaria-hacer="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-resistencia-soltaria-hacer="todavia_no">Todavía no</button>
+        </div>
+
+        <p class="miedo-pregunta" style="margin-top: 16px;">
+          ¿Podrías permitirte soltar tu resistencia a NO hacerlo?
+        </p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-resistencia-soltaria-no-hacer="si">Sí</button>
+          <button type="button" class="button small secondary" data-resistencia-soltaria-no-hacer="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-resistencia-soltaria-no-hacer="todavia_no">Todavía no</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>3. Ejercicio físico de empuje</h3>
+        <div class="mini-card">
+          <p>
+            <strong>Instrucciones:</strong> Coloca las manos frente a ti como si fueras a rezar. 
+            Decide qué mano empuja y cuál resiste. Empuja suavemente y experimenta la tensión de resistir. 
+            Luego, suelta la resistencia sin intentar controlar las manos. Deja que hagan lo que quieran. 
+            Repite alternando las manos.
+          </p>
+        </div>
+        <label class="limpieza-completada-label" style="margin-top: 12px;">
+          <input type="checkbox" data-action="resistencia-ejercicio-fisico" id="resistenciaEjercicioFisico" />
+          He realizado el ejercicio y he soltado la resistencia física
+        </label>
+      </div>
+
+      <div class="card">
+        <h3>4. Resistencia a los propios sentimientos</h3>
+        <p class="small">A veces nos oponemos a sentir lo que sentimos (miedo, ira, tristeza, etc.).</p>
+        <label>
+          ¿A qué sentimiento te estás resistiendo ahora?
+          <input id="resistenciaSentimientoInput" placeholder="Ej: Me resisto a sentir ansiedad..." />
+        </label>
+
+        <p class="miedo-pregunta" style="margin-top: 16px;">
+          ¿Podrías permitirte sentir esta resistencia un momento?
+        </p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-resistencia-soltaria-sentimiento="si">Sí, la acepto y la suelto</button>
+          <button type="button" class="button small secondary" data-resistencia-soltaria-sentimiento="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-resistencia-soltaria-sentimiento="todavia_no">Todavía no</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>5. Cierre</h3>
+        <label>
+          Intensidad final de la resistencia: <strong id="resistenciaIntensidadFinalTexto">5</strong>/10
+          <input type="range" id="resistenciaIntensidadFinal" min="0" max="10" value="5" />
+        </label>
+
+        <label>
+          Beneficio o cambio notado
+          <input id="resistenciaBeneficioInput" placeholder="Ej: siento más fluidez, menos presión..." />
+        </label>
+      </div>
+
+      <div class="card">
+        <button type="button" class="button" data-action="guardar-resistencia-diario">
+          Guardar en el diario
+        </button>
+        <button type="button" class="button ghost" data-action="reiniciar-resistencia">
+          Reiniciar ejercicio
+        </button>
+        <p class="small" style="margin-top: 12px;">
+          Los cambios se guardan automáticamente en este navegador.
+        </p>
+      </div>
+    </section>
+
+    <!-- EJERCICIO DE OBJETIVOS -->
+    <section id="view-ejercicio-objetivos" class="view">
+      <div class="card">
+        <h2>Formulación de Objetivos</h2>
+        <p>
+          Un objetivo bien formulado te acerca a lo que deseas con menos esfuerzo.
+          Seguí esta guía paso a paso para crear, liberar y visualizar tus metas.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Biblioteca de objetivos</h3>
+        <div id="objetivosListaGuardados"></div>
+        <button type="button" class="button" data-action="objetivos-nuevo">
+          + Nuevo objetivo
+        </button>
+      </div>
+    </section>
+
+    <!-- EJERCICIO DE HÁBITOS -->
+    <section id="view-ejercicio-habitos" class="view">
+      <div class="card">
+        <h2>Liberar un mal hábito</h2>
+        <p>
+          Los patrones de conducta están condicionados por patrones de sentimiento.
+          Si soltamos los sentimientos que hay debajo, el hábito pierde fuerza y
+          termina por desaparecer sin esfuerzo.
+        </p>
+        <div class="mini-card">
+          <p class="small">
+            <strong>Nota importante:</strong> Si tenés una dependencia química o
+            estás bajo tratamiento médico, no dejes tu tratamiento ni cambies
+            tu medicación. Este ejercicio es un apoyo emocional complementario,
+            no un sustituto del cuidado profesional.
+          </p>
+        </div>
+
+        <label>
+          Intensidad del impulso ahora: <strong id="habitoIntensidadInicialTexto">5</strong>/10
+          <input type="range" id="habitoIntensidadInicial" min="0" max="10" value="5" />
+        </label>
+      </div>
+
+      <div class="card">
+        <h3>1. Identificar el hábito</h3>
+        <label>
+          ¿Qué hábito o impulso querés trabajar?
+          <input id="habitoNombreInput" placeholder="Ej: fumar, comer de más, comprar por impulso, aplazar..." />
+        </label>
+
+        <div class="mini-card">
+          <p>
+            <strong>El pacto:</strong> En vez de decir "nunca más", hacé este pacto
+            con vos mismo: <em>"Si querés, podés... pero antes liberá."</em>
+          </p>
+          <p class="small">
+            Permitite seguir con el hábito si después de liberar todavía querés
+            hacerlo. Esto quita la tensión del "no puedo" y crea un espacio real
+            para soltar.
+          </p>
+        </div>
+
+        <label class="limpieza-completada-label">
+          <input type="checkbox" id="habitoPactoAceptado" data-action="habito-pacto" />
+          Acepto el pacto: si después de liberar sigo queriendo, puedo.
+        </label>
+      </div>
+
+      <div class="card">
+        <h3>2. Liberar antes del impulso</h3>
+        <p class="small">
+          Pensá en el hábito AHORA. ¿Qué sentís cuando aparece el impulso o cuando
+          pensás en no hacerlo?
+        </p>
+        <label>
+          Sentimiento frente al hábito (ansiedad, vacío, aburrimiento, necesidad...)
+          <textarea id="habitoSentimientoAntesInput" placeholder="Ej: ansiedad en el pecho, necesidad de calmarme..."></textarea>
+        </label>
+
+        <label>
+          Necesidad subyacente
+          <select id="habitoNecesidadAntesSelect">
+            <option value="no_se">No identificado</option>
+            <option value="aprobacion">Aprobación</option>
+            <option value="control">Control</option>
+            <option value="seguridad">Seguridad</option>
+            <option value="separacion">Separación</option>
+          </select>
+        </label>
+
+        <p class="miedo-pregunta">
+          ¿Podrías soltar esta necesidad ahora mismo?
+        </p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-habito-soltaria-antes="si">Sí, puedo</button>
+          <button type="button" class="button small secondary" data-habito-soltaria-antes="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-habito-soltaria-antes="todavia_no">Todavía no</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>3. El momento de ceder</h3>
+        <p class="small">
+          Recordá un momento concreto en que cediste al hábito (la última vez).
+          Observá qué sentías justo antes, durante y después.
+        </p>
+
+        <label>
+          Justo antes del impulso (¿qué te empujaba?)
+          <textarea id="habitoAntesCederInput" placeholder="Ej: hambre emocional, aburrimiento, ira, soledad..."></textarea>
+        </label>
+
+        <label>
+          Durante el hábito (¿qué sentías mientras lo hacías?)
+          <textarea id="habitoDuranteInput" placeholder="Ej: alivio falso, alegría injustificada, lucha interna..."></textarea>
+        </label>
+
+        <label>
+          Justo después (¿qué apareció al terminar?)
+          <textarea id="habitoDespuesInput" placeholder="Ej: culpa, tristeza, decepción, vacío..."></textarea>
+        </label>
+
+        <p class="miedo-pregunta" style="margin-top: 16px;">
+          ¿Podrías soltar estos sentimientos asociados al hábito?
+        </p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-habito-soltaria-ceder="si">Sí, los suelto</button>
+          <button type="button" class="button small secondary" data-habito-soltaria-ceder="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-habito-soltaria-ceder="todavia_no">Todavía no</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>4. El hábito como recuerdo</h3>
+        <div class="mini-card">
+          <p>
+            Los malos hábitos son patrones en tu conciencia. Si los tratás como
+            <strong>recuerdos del pasado</strong>, pierden fuerza para repetirse
+            en el presente.
+          </p>
+        </div>
+
+        <p class="miedo-pregunta">
+          ¿Podrías permitirte recordar que pensabas que tenías este hábito?
+        </p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-habito-recordar="si">Sí, lo recuerdo como algo del pasado</button>
+          <button type="button" class="button small secondary" data-habito-recordar="todavia_no">Todavía lo siento presente</button>
+        </div>
+
+        <p class="miedo-pregunta" style="margin-top: 16px;">
+          ¿Te gustaría cambiar eso del pasado?
+        </p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-habito-cambiar-pasado="si">Sí</button>
+          <button type="button" class="button small secondary" data-habito-cambiar-pasado="no">No</button>
+        </div>
+
+        <p class="miedo-pregunta" style="margin-top: 16px;">
+          ¿Podrías soltar el deseo de pensar que todavía tenés ese hábito?
+        </p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-habito-soltaria-identidad="si">Sí, lo suelto</button>
+          <button type="button" class="button small secondary" data-habito-soltaria-identidad="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-habito-soltaria-identidad="todavia_no">Todavía no</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>5. Ventajas e inconvenientes ocultos</h3>
+        <p class="small">
+          En el subconsciente hay al menos una ventaja oculta de mantener el hábito.
+          Descubrila, liberala y el hábito pierde su sostén.
+        </p>
+
+        <div class="columns">
+          <div class="column-card" style="padding: 0;">
+            <h4 style="margin: 0 0 12px 0;">Ventajas de mantenerlo</h4>
+            <div class="add-row">
+              <input id="habitoVentajaInput" placeholder="Ej: me calma, me distrae, evita que piense..." />
+              <button type="button" data-action="habito-agregar-ventaja">+</button>
+            </div>
+            <div id="habitoVentajasLista"></div>
+          </div>
+
+          <div class="column-card" style="padding: 0;">
+            <h4 style="margin: 0 0 12px 0;">Inconvenientes de mantenerlo</h4>
+            <div class="add-row">
+              <input id="habitoInconvenienteInput" placeholder="Ej: me cansa, me aleja de mis metas, me cuesta dinero..." />
+              <button type="button" data-action="habito-agregar-inconveniente">+</button>
+            </div>
+            <div id="habitoInconvenientesLista"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>6. Gustos y aversiones</h3>
+        <p class="small">
+          Liberá lo que te gusta y lo que no te gusta del hábito. Cada pareja
+          es una capa de apego o rechazo que soltás.
+        </p>
+
+        <div class="columns">
+          <div class="column-card" style="padding: 0;">
+            <h4 style="margin: 0 0 12px 0;">Lo que me gusta</h4>
+            <div class="add-row">
+              <input id="habitoGustoInput" placeholder="Ej: el ritual, el alivio inmediato..." />
+              <button type="button" data-action="habito-agregar-gusto">+</button>
+            </div>
+            <div id="habitoGustosLista"></div>
+          </div>
+
+          <div class="column-card" style="padding: 0;">
+            <h4 style="margin: 0 0 12px 0;">Lo que no me gusta</h4>
+            <div class="add-row">
+              <input id="habitoAversionInput" placeholder="Ej: el olor, el costo, cómo me siento después..." />
+              <button type="button" data-action="habito-agregar-aversion">+</button>
+            </div>
+            <div id="habitoAversionesLista"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>7. Cierre</h3>
+        <div class="mini-card">
+          <p>
+            El objetivo no es pelear con el hábito, sino llegar a un punto donde
+            <strong>te sientas bien tanto si lo hacés como si no</strong>.
+            Desde esa libertad, el hábito pierde el control sobre vos.
+          </p>
+        </div>
+
+        <label>
+          Intensidad del impulso ahora: <strong id="habitoIntensidadFinalTexto">5</strong>/10
+          <input type="range" id="habitoIntensidadFinal" min="0" max="10" value="5" />
+        </label>
+
+        <label>
+          Beneficio o cambio notado
+          <input id="habitoBeneficioInput" placeholder="Ej: siento menos urgencia, veo el hábito más lejano..." />
+        </label>
+      </div>
+
+      <div class="card">
+        <button type="button" class="button" data-action="guardar-habito-diario">
+          Guardar en el diario
+        </button>
+        <button type="button" class="button ghost" data-action="reiniciar-habito">
+          Reiniciar ejercicio
+        </button>
+        <p class="small" style="margin-top: 12px;">
+          Los cambios se guardan automáticamente en este navegador.
+        </p>
+      </div>
+    </section>
+
+    <!-- EJERCICIO DE DINERO / ABUNDANCIA -->
+    <section id="view-ejercicio-dinero" class="view">
+      <div class="card">
+        <h2>Liberar tu relación con el dinero</h2>
+        <p>
+          Tus creencias sobre el dinero, la abundancia y la libertad económica
+          están profundamente condicionadas por tu familia, tus miedos y tu
+          subconsciente. Este ejercicio te guía paso a paso para liberar esos
+          bloqueos y abrirte a la prosperidad.
+        </p>
+        <label>
+          Intensidad del bloqueo económico ahora: <strong id="dineroIntensidadInicialTexto">5</strong>/10
+          <input type="range" id="dineroIntensidadInicial" min="0" max="10" value="5" />
+        </label>
+      </div>
+
+      <div class="card">
+        <h3>1. Creencias heredadas de los padres</h3>
+        <p class="small">
+          La mayoría copiamos la actitud económica de nuestros padres o vivimos
+          oponiéndonos a ella. En ambos casos, esa actitud nos retratae de crear
+          nuestra propia abundancia.
+        </p>
+
+        <label>
+          ¿Cómo era la actitud de tus padres hacia el dinero? (escasez, miedo, tacañería, despreocupación, conflictos...)
+          <textarea id="dineroPadresActitudInput" placeholder="Ej: Siempre preocupados por el dinero, decían que 'el dinero no crece en los árboles'..."></textarea>
+        </label>
+
+        <label>
+          ¿Qué patrón económico de tus padres has copiado o a cuál te opones?
+          <textarea id="dineroPatronInput" placeholder="Ej: Miedo a invertir, gastar todo lo que gano, no cobrar lo que valgo..."></textarea>
+        </label>
+
+        <p class="miedo-pregunta" style="margin-top: 16px;">
+          ¿Podrías soltar el deseo de cambiar o oponerte a su forma de ser con el dinero?
+        </p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-dinero-soltaria-padres="si">Sí, lo suelto</button>
+          <button type="button" class="button small secondary" data-dinero-soltaria-padres="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-dinero-soltaria-padres="todavia_no">Todavía no</button>
+        </div>
+
+        <p class="miedo-pregunta" style="margin-top: 16px;">
+          ¿Podrías soltar el deseo de imitarlos o de ser como ellos económicamente?
+        </p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-dinero-soltaria-imitar="si">Sí, lo suelto</button>
+          <button type="button" class="button small secondary" data-dinero-soltaria-imitar="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-dinero-soltaria-imitar="todavia_no">Todavía no</button>
+        </div>
+
+        <label style="margin-top: 16px;">
+          ¿Cómo te gustaría ser vos con el dinero, libre de ese patrón?
+          <textarea id="dineroPropiaActitudInput" placeholder="Ej: Me permito ganar con facilidad, administro con calma, disfruto la abundancia..."></textarea>
+        </label>
+      </div>
+
+      <div class="card">
+        <h3>2. Miedos al dinero</h3>
+        <div class="mini-card">
+          <p>
+            <strong>Idea clave:</strong> Inconscientemente, a veces deseamos que
+            ocurra aquello que tememos. Si temes una auditoría, perderlo todo,
+            que te envidien... estás manteniendo esa imagen viva.
+          </p>
+          <p class="small">
+            <strong>El atajo:</strong> <em>¿Podría soltar el deseo de que eso ocurra?</em>
+          </p>
+        </div>
+
+        <div class="add-row">
+          <input id="dineroMiedoInput" placeholder="Ej: una auditoría, perderlo todo, que me envidien..." />
+          <button type="button" data-action="dinero-agregar-miedo">+</button>
+        </div>
+        <div id="dineroMiedosLista"></div>
+      </div>
+
+      <div class="card">
+        <h3>3. Limpieza relacional con el dinero</h3>
+        <p class="small">
+          Tratá al dinero como si fuera una persona con la que tenés una
+          relación. Respondé cada pregunta liberando lo que surja.
+        </p>
+
+        <h4 style="margin-top: 16px;">Control</h4>
+        <div id="dineroLimpiezaControl"></div>
+
+        <h4 style="margin-top: 16px;">Aprobación</h4>
+        <div id="dineroLimpiezaAprobacion"></div>
+
+        <h4 style="margin-top: 16px;">Seguridad</h4>
+        <div id="dineroLimpiezaSeguridad"></div>
+      </div>
+
+      <div class="card">
+        <h3>4. Gustos y aversiones sobre tu situación económica</h3>
+        <p class="small">
+          Liberá lo que te gusta y lo que no te gusta de tu situación actual.
+          Cada pareja es una capa de apego o rechazo que soltás.
+        </p>
+
+        <div class="columns">
+          <div class="column-card" style="padding: 0;">
+            <h4 style="margin: 0 0 12px 0;">Lo que me gusta</h4>
+            <div class="add-row">
+              <input id="dineroGustoInput" placeholder="Ej: mi trabajo, ciertos ingresos, la estabilidad..." />
+              <button type="button" data-action="dinero-agregar-gusto">+</button>
+            </div>
+            <div id="dineroGustosLista"></div>
+          </div>
+
+          <div class="column-card" style="padding: 0;">
+            <h4 style="margin: 0 0 12px 0;">Lo que no me gusta</h4>
+            <div class="add-row">
+              <input id="dineroAversionInput" placeholder="Ej: las deudas, la incertidumbre, los impuestos..." />
+              <button type="button" data-action="dinero-agregar-aversion">+</button>
+            </div>
+            <div id="dineroAversionesLista"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>5. Ventajas e inconvenientes de la libertad económica</h3>
+        <p class="small">
+          Descubrí qué ganas y qué perdés (según tu subconsciente) al ser
+          financieramente libre. Mientras no desenmascares los inconvenientes
+          ocultos, serán ellos los que gobiernen tu vida.
+        </p>
+
+        <div class="columns">
+          <div class="column-card" style="padding: 0;">
+            <h4 style="margin: 0 0 12px 0;">Ventajas de ser libre</h4>
+            <div class="add-row">
+              <input id="dineroVentajaInput" placeholder="Ej: tranquilidad, opciones, ayudar a otros..." />
+              <button type="button" data-action="dinero-agregar-ventaja">+</button>
+            </div>
+            <div id="dineroVentajasLista"></div>
+          </div>
+
+          <div class="column-card" style="padding: 0;">
+            <h4 style="margin: 0 0 12px 0;">Inconvenientes de ser libre</h4>
+            <div class="add-row">
+              <input id="dineroInconvenienteInput" placeholder="Ej: más responsabilidad, envidias, soledad..." />
+              <button type="button" data-action="dinero-agregar-inconveniente">+</button>
+            </div>
+            <div id="dineroInconvenientesLista"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>6. Visualización de tu situación económica ideal</h3>
+        <p class="small">
+          Imaginá vívidamente tu situación económica ideal YA LOGRADA. Usá todos
+          tus sentidos: lo que ves, sentís, escuchás. Si aparecen objeciones
+          ("no puedo", "no lo merezco"), liberalas.
+        </p>
+
+        <label>
+          Describí tu situación económica ideal:
+          <textarea id="dineroVisualizacionInput" placeholder="Ej: Veo mi cuenta con abundancia, siento calma, escucho a mi familia disfrutando..." rows="4"></textarea>
+        </label>
+
+        <h4 style="margin-top: 16px;">Objeciones o creencias limitantes</h4>
+        <div class="add-row">
+          <input id="dineroObjecionInput" placeholder="Ej: No lo merezco, es muy difícil, la gente rica es mala..." />
+          <button type="button" data-action="dinero-agregar-objecion">+</button>
+        </div>
+        <div id="dineroObjecionesLista"></div>
+
+        <div class="mini-card" style="margin-top: 16px;">
+          <p>
+            <strong>Dejá que la imagen entre en tu conciencia.</strong> Está bien
+            tener lo que deseás. Te lo mereces. No hay contradicción entre
+            aceptar tu situación actual y abrirte a algo mejor.
+          </p>
+        </div>
+
+        <p class="miedo-pregunta" style="margin-top: 16px;">
+          ¿Podrías permitirte aceptar completamente que esta abundancia se haga realidad en tu vida?
+        </p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-dinero-acepta-abundancia="si">Sí, la acepto</button>
+          <button type="button" class="button small secondary" data-dinero-acepta-abundancia="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-dinero-acepta-abundancia="todavia_no">Todavía no</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>7. Cierre</h3>
+        <label>
+          Intensidad del bloqueo económico ahora: <strong id="dineroIntensidadFinalTexto">5</strong>/10
+          <input type="range" id="dineroIntensidadFinal" min="0" max="10" value="5" />
+        </label>
+
+        <label>
+          Beneficio o cambio notado
+          <input id="dineroBeneficioInput" placeholder="Ej: siento menos miedo, veo más posibilidades, acepto la abundancia..." />
+        </label>
+      </div>
+
+      <div class="card">
+        <button type="button" class="button" data-action="guardar-dinero-diario">
+          Guardar en el diario
+        </button>
+        <button type="button" class="button ghost" data-action="reiniciar-dinero">
+          Reiniciar ejercicio
+        </button>
+        <p class="small" style="margin-top: 12px;">
+          Los cambios se guardan automáticamente en este navegador.
+        </p>
+      </div>
+    </section>
+
+    <!-- EJERCICIO DE RELACIONES -->
+    <section id="view-ejercicio-relaciones" class="view">
+      <div class="card">
+        <h2>Liberar tu relación</h2>
+        <p>
+          La mayoría de nuestras relaciones se basan más en la necesidad que en el amor.
+          Este ejercicio te guía paso a paso para soltar los apegos, los miedos y los
+          reproches que te impiden disfrutar de relaciones plenas.
+        </p>
+
+        <label>
+          Persona o relación con la que trabajar
+          <input id="relacionesPersonaInput" placeholder="Ej: mi pareja, mi madre, una expareja, una relación futura..." />
+        </label>
+
+        <label>
+          Intensidad del malestar con esta relación: <strong id="relacionesIntensidadInicialTexto">5</strong>/10
+          <input type="range" id="relacionesIntensidadInicial" min="0" max="10" value="5" />
+        </label>
+      </div>
+
+      <div class="card">
+        <h3>1. Trascender a los padres</h3>
+        <div class="mini-card">
+          <p>
+            Nuestros padres son nuestro primer modelo de cómo relacionarnos. Solemos copiar
+            la forma en que se relacionaban entre sí o con nosotros, o vivir oponiéndonos a ella.
+            Para liberar tus relaciones, empezá por ahí. Incluso si la relación fue sana,
+            liberar sobre ella solo puede mejorarla.
+          </p>
+        </div>
+
+        <label>
+          ¿Qué hay en tu relación con tus padres, o en la relación que ellos mantuvieron entre sí, que te gustaría cambiar?
+          <textarea id="relacionesPadresInput" placeholder="Ej: siempre criticaban, eran distantes, discutían mucho, buscaban mi aprobación..."></textarea>
+        </label>
+
+        <label>
+          ¿Hay algo en tus primeras relaciones con compañeros o amigos que también quieras soltar?
+          <input id="relacionesAmigosInput" placeholder="Ej: era tímido, me costaba hacer amigos, buscaba aprobación..." />
+        </label>
+
+        <p class="miedo-pregunta">
+          ¿Despierta esto un deseo de aprobación, control o seguridad?
+        </p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-relaciones-deseo-padres="aprobacion">Aprobación</button>
+          <button type="button" class="button small secondary" data-relaciones-deseo-padres="control">Control</button>
+          <button type="button" class="button small secondary" data-relaciones-deseo-padres="seguridad">Seguridad</button>
+          <button type="button" class="button small secondary" data-relaciones-deseo-padres="no_se">No lo sé</button>
+        </div>
+
+        <p class="miedo-pregunta" style="margin-top: 16px;">
+          ¿Podrías soltar el deseo de cambiarlo?
+        </p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-relaciones-soltaria-padres="si">Sí, lo suelto</button>
+          <button type="button" class="button small secondary" data-relaciones-soltaria-padres="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-relaciones-soltaria-padres="todavia_no">Todavía no</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>2. Pasar del miedo al amor</h3>
+        <div class="mini-card">
+          <p>
+            <strong>Idea clave:</strong> el miedo al compromiso, a la intimidad o a que nos
+            hagan daño nos retrae. El atajo es soltar el deseo de que ocurra aquello que tememos.
+          </p>
+        </div>
+
+        <div class="add-row">
+          <input id="relacionesMiedoInput" placeholder="Ej: que me abandonen, depender, que me hagan daño, la intimidad..." />
+          <button type="button" data-action="relaciones-agregar-miedo">+</button>
+        </div>
+        <div id="relacionesMiedosLista"></div>
+      </div>
+
+      <div class="card">
+        <h3>3. Gustos y aversiones de la relación</h3>
+        <p class="small">
+          Liberá lo que te gusta y lo que no te gusta de esta relación. Cada pareja
+          de gusto y aversión es una capa de apego o rechazo que soltás.
+        </p>
+
+        <div class="columns">
+          <div class="column-card" style="padding: 0;">
+            <h4 style="margin: 0 0 12px 0;">Lo que me gusta</h4>
+            <div class="add-row">
+              <input id="relacionesGustoInput" placeholder="Ej: su humor, cómo me acompaña, la conexión..." />
+              <button type="button" data-action="relaciones-agregar-gusto">+</button>
+            </div>
+            <div id="relacionesGustosLista"></div>
+          </div>
+
+          <div class="column-card" style="padding: 0;">
+            <h4 style="margin: 0 0 12px 0;">Lo que no me gusta</h4>
+            <div class="add-row">
+              <input id="relacionesAversionInput" placeholder="Ej: llega tarde, no escucha, el silencio..." />
+              <button type="button" data-action="relaciones-agregar-aversion">+</button>
+            </div>
+            <div id="relacionesAversionesLista"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>4. Procedimiento de limpieza</h3>
+        <p class="small">
+          Una de las herramientas más potentes para las relaciones: recorre control,
+          aprobación, seguridad y separación/unidad con la persona, hasta llegar a un
+          "sí" sincero en cada fase.
+        </p>
+        <button type="button" class="button" data-action="relaciones-abrir-limpieza">
+          Abrir procedimiento de limpieza
+        </button>
+      </div>
+
+      <div class="card">
+        <h3>5. Quemar tu lista interna</h3>
+        <div class="mini-card">
+          <p>
+            Tendemos a llevar una lista interna de lo que la otra persona hizo mal, y a
+            esperar que lo repita para reafirmar nuestra postura. "Quemar la lista" es
+            soltar esos reproches y buscar lo que podés querer y apreciar. Así se
+            prolonga la luna de miel: soltando lo que esperás que cambie.
+          </p>
+        </div>
+
+        <div class="add-row">
+          <input id="relacionesListaInput" placeholder="Ej: me hizo pasar vergüenza, llegó tarde a mi cumpleaños..." />
+          <button type="button" data-action="relaciones-agregar-lista">+</button>
+        </div>
+        <div id="relacionesListaInterna"></div>
+      </div>
+
+      <div class="card">
+        <h3>6. Ejercicio de desacuerdo (para hacer solo)</h3>
+        <p class="small">
+          El desacuerdo se disuelve cuando ves el punto de vista del otro. En pareja se
+          hace defendiendo cada uno la postura del otro; adaptado para vos solo: escribí
+          el tema, defendé tu punto de vista con todo tu sentimiento y luego defendé el
+          del otro como si fuera tuyo.
+        </p>
+
+        <label>
+          Tema del desacuerdo
+          <input id="relacionesDesacuerdoTemaInput" placeholder="Ej: dónde vivir, el dinero, la crianza de los hijos..." />
+        </label>
+
+        <label>
+          Tu punto de vista (defendelo con todo tu sentimiento)
+          <textarea id="relacionesDesacuerdoMiVistaInput" placeholder="Escribilo como si lo estuvieras discutiendo, con toda la carga emocional..."></textarea>
+        </label>
+
+        <label>
+          El punto de vista de la otra persona (defendelo como si fuera tuyo)
+          <textarea id="relacionesDesacuerdoOtroVistaInput" placeholder="Usá sus palabras, ponete en su lugar, sentí y manifestá sus sentimientos..."></textarea>
+        </label>
+
+        <p class="miedo-pregunta" style="margin-top: 16px;">
+          ¿Podrías soltar lo que este ejercicio haya generado?
+        </p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-relaciones-soltaria-desacuerdo="si">Sí, lo suelto</button>
+          <button type="button" class="button small secondary" data-relaciones-soltaria-desacuerdo="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-relaciones-soltaria-desacuerdo="todavia_no">Todavía no</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>7. Visualizar tu relación ideal</h3>
+        <div class="mini-card">
+          <p>
+            Imaginá vívidamente tu relación ideal YA LOGRADA, usando todos tus sentidos:
+            lo que ves, sentís y escuchás. Saber que está bien tener esa relación y, al
+            mismo tiempo, aceptar la relación tal como es ahora.
+          </p>
+        </div>
+
+        <label>
+          Describí tu relación ideal:
+          <textarea id="relacionesVisualizacionInput" placeholder="Ej: veo la cena juntos sin discusión, siento calma, escucho risas y cariño..." rows="4"></textarea>
+        </label>
+
+        <h4 style="margin-top: 16px;">Objeciones o creencias limitantes</h4>
+        <div class="add-row">
+          <input id="relacionesObjecionInput" placeholder="Ej: no lo merezco, no soy suficiente, no es posible..." />
+          <button type="button" data-action="relaciones-agregar-objecion">+</button>
+        </div>
+        <div id="relacionesObjecionesLista"></div>
+
+        <p class="miedo-pregunta" style="margin-top: 16px;">
+          ¿Podrías permitirte aceptar que esta relación ideal se haga realidad?
+        </p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-relaciones-acepta-ideal="si">Sí, la acepto</button>
+          <button type="button" class="button small secondary" data-relaciones-acepta-ideal="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-relaciones-acepta-ideal="todavia_no">Todavía no</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>8. Cierre</h3>
+        <label>
+          Intensidad del malestar ahora: <strong id="relacionesIntensidadFinalTexto">5</strong>/10
+          <input type="range" id="relacionesIntensidadFinal" min="0" max="10" value="5" />
+        </label>
+
+        <label>
+          Beneficio o cambio notado
+          <input id="relacionesBeneficioInput" placeholder="Ej: me siento más libre, veo a la persona tal como es, siento más cariño..." />
+        </label>
+      </div>
+
+      <div class="card">
+        <button type="button" class="button" data-action="guardar-relaciones-diario">
+          Guardar en el diario
+        </button>
+        <button type="button" class="button ghost" data-action="reiniciar-relaciones">
+          Reiniciar ejercicio
+        </button>
+        <p class="small" style="margin-top: 12px;">
+          Los cambios se guardan automáticamente en este navegador.
+        </p>
+      </div>
+    </section>
+
+    <!-- EJERCICIO DE SALUD -->
+    <section id="view-ejercicio-salud" class="view">
+      <div class="card">
+        <h2>Salud y cuerpo</h2>
+        <p>
+          La mayor parte del sufrimiento que acompaña a un problema físico viene de
+          nuestras reacciones emocionales a lo que experimenta nuestro cuerpo. Liberar
+          esas reacciones no sustituye el tratamiento médico, pero puede aliviar el
+          sufrimiento y, en muchos casos, estimular la capacidad de sanar.
+        </p>
+        <p class="small">
+          <strong>Aviso:</strong> esta app es solo apoyo emocional. Si creés que
+          necesitás atención profesional, consultá a un médico o terapeuta.
+        </p>
+
+        <label>
+          Tema o preocupación de salud con el que trabajar
+          <input id="saludPreocupacionInput" placeholder="Ej: mi peso, una molestia en la espalda, mi energía, dejar de fumar..." />
+        </label>
+
+        <label>
+          Intensidad del malestar con este tema: <strong id="saludIntensidadInicialTexto">5</strong>/10
+          <input type="range" id="saludIntensidadInicial" min="0" max="10" value="5" />
+        </label>
+      </div>
+
+      <div class="card">
+        <h3>1. Cinco pasos para afrontar la incomodidad</h3>
+
+        <div class="mini-card">
+          <h4 style="margin: 0 0 8px 0;">Paso 1: Considerá la posibilidad de curarte</h4>
+          <p>
+            Para cambiar tu cuerpo, cambia tu mente. Mirá hacia adentro: ¿estás abierto a
+            la posibilidad de que liberar tus emociones mejore tu salud física?
+          </p>
+        </div>
+
+        <p class="miedo-pregunta">¿Estás abierto a esa posibilidad?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-salud-abierto-cura="si">Sí</button>
+          <button type="button" class="button small secondary" data-salud-abierto-cura="no">Tengo dudas</button>
+        </div>
+
+        <p class="miedo-pregunta">Si albergás dudas: ¿de qué deseo proceden?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-salud-deseo-cura="aprobacion">Aprobación</button>
+          <button type="button" class="button small secondary" data-salud-deseo-cura="control">Control</button>
+          <button type="button" class="button small secondary" data-salud-deseo-cura="seguridad">Seguridad</button>
+        </div>
+
+        <p class="miedo-pregunta">¿Podrías soltar ese deseo?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-salud-soltaria-cura="si">Sí, lo suelto</button>
+          <button type="button" class="button small secondary" data-salud-soltaria-cura="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-salud-soltaria-cura="todavia_no">Todavía no</button>
+        </div>
+
+        <div class="mini-card" style="margin-top: 16px;">
+          <h4 style="margin: 0 0 8px 0;">Paso 2: Querete tal como estás</h4>
+          <p>
+            Observá la desaprobación que haces de tu cuerpo o de una parte que te inquieta.
+            ¿Podrías soltarla? Luego concédete la aprobación sin razón alguna.
+          </p>
+        </div>
+
+        <label>
+          ¿Qué parte de tu cuerpo o aspecto desapruebas?
+          <input id="saludDesaprobacionInput" placeholder="Ej: mi abdomen, mis arrugas, una cicatriz, mi peso..." />
+        </label>
+
+        <p class="miedo-pregunta">¿Podrías soltar tu desaprobación de esa parte?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-salud-soltaria-desaprobacion="si">Sí, la suelto</button>
+          <button type="button" class="button small secondary" data-salud-soltaria-desaprobacion="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-salud-soltaria-desaprobacion="todavia_no">Todavía no</button>
+        </div>
+        <p class="small" style="margin-top: 8px;">
+          Ahora acariciá esa parte con todo el cariño que puedas, y concédete la aprobación sin necesitar razón alguna.
+        </p>
+
+        <div class="mini-card" style="margin-top: 16px;">
+          <h4 style="margin: 0 0 8px 0;">Paso 3: Dejá de preguntarte por qué</h4>
+          <p>
+            Sufrimos menos cuando soltamos la necesidad de saber por qué. Solo te preguntarás
+            el porqué porque prevés volver a sufrir en el futuro.
+          </p>
+        </div>
+
+        <p class="miedo-pregunta">¿Preferís comprender por qué, o simplemente sentirte mejor?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-salud-prefiere="sentirme_mejor">Sentirme mejor</button>
+          <button type="button" class="button small secondary" data-salud-prefiere="comprender">Comprender por qué</button>
+        </div>
+
+        <p class="miedo-pregunta">¿Podrías soltar el deseo de averiguar los porqués?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-salud-soltaria-saber="si">Sí, lo suelto</button>
+          <button type="button" class="button small secondary" data-salud-soltaria-saber="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-salud-soltaria-saber="todavia_no">Todavía no</button>
+        </div>
+
+        <label style="margin-top: 12px;">
+          Miedo a los médicos, hospitales o tratamientos (si lo hay)
+          <input id="saludMiedoMedicosInput" placeholder="Ej: me dan miedo las agujas, no me gusta el hospital, me da vergüenza..." />
+        </label>
+        <p class="small">Sentí lo que surja, preguntate si procede de un deseo de aprobación, control o seguridad, y soltalo.</p>
+
+        <div class="mini-card" style="margin-top: 16px;">
+          <h4 style="margin: 0 0 8px 0;">Paso 4: Superá el diagnóstico</h4>
+          <p>
+            Un diagnóstico puede convertirse en una predicción que se cumple. Seguí los
+            consejos de tu médico, pero soltá la creencia de que define tu futuro.
+            Tratá el diagnóstico como un recuerdo.
+          </p>
+        </div>
+
+        <label>
+          ¿Cuál es el diagnóstico o etiqueta que te pesa?
+          <input id="saludDiagnosticoInput" placeholder="Ej: colitis, ansiedad, insomnio, lo que sea..." />
+        </label>
+
+        <p class="miedo-pregunta">¿Podrías soltar el deseo de cambiar esa circunstancia del pasado?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-salud-soltaria-pasado="si">Sí, lo suelto</button>
+          <button type="button" class="button small secondary" data-salud-soltaria-pasado="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-salud-soltaria-pasado="todavia_no">Todavía no</button>
+        </div>
+
+        <p class="miedo-pregunta">¿Podrías soltar el deseo de creer que padecés ese diagnóstico?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-salud-soltaria-creer="si">Sí, lo suelto</button>
+          <button type="button" class="button small secondary" data-salud-soltaria-creer="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-salud-soltaria-creer="todavia_no">Todavía no</button>
+        </div>
+
+        <div class="mini-card" style="margin-top: 16px;">
+          <h4 style="margin: 0 0 8px 0;">Paso 5: Soltá tu dolor y tus síntomas</h4>
+          <p>
+            Observá cómo te sientes por tener ese síntoma, identificá el deseo detrás y soltalo.
+            También podés alternar entre sentirlo en plenitud y sentir el espacio que lo rodea
+            y lo penetra.
+          </p>
+        </div>
+
+        <label>
+          ¿Qué síntoma o dolor querés trabajar?
+          <input id="saludSintomaInput" placeholder="Ej: dolor de cabeza, tensión en el cuello, cansancio..." />
+        </label>
+
+        <p class="miedo-pregunta">¿Podrías soltar el sentimiento que te provoca este síntoma?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-salud-soltaria-sintoma="si">Sí, lo suelto</button>
+          <button type="button" class="button small secondary" data-salud-soltaria-sintoma="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-salud-soltaria-sintoma="todavia_no">Todavía no</button>
+        </div>
+        <p class="small" style="margin-top: 8px;">
+          Si el síntoma persiste: sentílo con toda su intensidad y luego sentí el vacío o el
+          espacio que lo rodea y penetra su interior. Alterná así unas cuantas veces.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>2. Aceptar las cosas como son</h3>
+        <p class="small">
+          Aceptar el cuerpo tal como es estimula su capacidad de sanar y te ayuda a sentirte
+          bien en este momento, sea lo que sea que el cuerpo haga. Oponerse solo hace que te
+          sientas peor.
+        </p>
+        <p class="miedo-pregunta">¿Podrías aceptar tu cuerpo tal como es, aunque sea por un momento?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-salud-acepta-cuerpo="si">Sí, lo acepto</button>
+          <button type="button" class="button small secondary" data-salud-acepta-cuerpo="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-salud-acepta-cuerpo="todavia_no">Todavía no</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>3. Ir más allá de tus padres sobre el cuerpo</h3>
+        <p class="small">
+          Desde pequeños tomamos a nuestros padres como modelo del cuerpo: copiando su actitud
+          u oponiéndonos a ella. Liberar sobre eso es un potente punto de partida.
+        </p>
+
+        <label>
+          ¿Qué actitud tenían tus padres hacia su cuerpo, su aspecto o el tuyo?
+          <textarea id="saludActitudPadresInput" placeholder="Ej: mi madre siempre estaba a dieta, mi padre se quejaba de su salud, se avergonzaban de su cuerpo..."></textarea>
+        </label>
+
+        <p class="miedo-pregunta">¿Podrías soltar el deseo de cambiar eso?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-salud-soltaria-padres="si">Sí, lo suelto</button>
+          <button type="button" class="button small secondary" data-salud-soltaria-padres="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-salud-soltaria-padres="todavia_no">Todavía no</button>
+        </div>
+
+        <p class="miedo-pregunta">¿Podrías soltar la resistencia a la actitud de tus padres?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-salud-soltaria-resistencia="si">Sí, la suelto</button>
+          <button type="button" class="button small secondary" data-salud-soltaria-resistencia="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-salud-soltaria-resistencia="todavia_no">Todavía no</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>4. Miedos del cuerpo</h3>
+        <p class="small">
+          A veces deseamos, de manera inconsciente, las cosas que tememos que ocurran. Liberar
+          el miedo es soltar el deseo de que ocurra.
+        </p>
+
+        <div class="add-row">
+          <input id="saludMiedoInput" placeholder="Ej: que al envejecer me duela todo, engordar, enfermar, caerme, una enfermedad..." />
+          <button type="button" data-action="salud-agregar-miedo">+</button>
+        </div>
+        <div id="saludMiedosLista"></div>
+      </div>
+
+      <div class="card">
+        <h3>5. Gustos y aversiones de tu cuerpo</h3>
+        <p class="small">
+          Al soltar gustos y aversiones empiezas a aceptar mejor tu cuerpo tal como es.
+          Si trabajás sobre un problema de salud, formularlo en pasado suele ayudar.
+        </p>
+
+        <div class="columns">
+          <div class="column-card" style="padding: 0;">
+            <h4 style="margin: 0 0 12px 0;">Lo que me gusta</h4>
+            <div class="add-row">
+              <input id="saludGustoInput" placeholder="Ej: mis piernas, mi energía, mi pelo..." />
+              <button type="button" data-action="salud-agregar-gusto">+</button>
+            </div>
+            <div id="saludGustosLista"></div>
+          </div>
+
+          <div class="column-card" style="padding: 0;">
+            <h4 style="margin: 0 0 12px 0;">Lo que no me gusta</h4>
+            <div class="add-row">
+              <input id="saludAversionInput" placeholder="Ej: mi barriga, las bolsas bajo los ojos..." />
+              <button type="button" data-action="salud-agregar-aversion">+</button>
+            </div>
+            <div id="saludAversionesLista"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>6. Limpieza con tu cuerpo</h3>
+        <p class="small">
+          El procedimiento de limpieza también funciona con el cuerpo, porque tenemos con él una
+          relación casi idéntica a la que tenemos con otra persona.
+        </p>
+        <button type="button" class="button" data-action="salud-abrir-limpieza">
+          Abrir procedimiento de limpieza
+        </button>
+      </div>
+
+      <div class="card">
+        <h3>7. Ventajas e inconvenientes del estado físico</h3>
+        <p class="small">
+          Liberar las ventajas e inconvenientes de tener el cuerpo que querés desbloquea
+          estancamientos como dietas, dejar de fumar o cualquier parálisis física.
+        </p>
+
+        <div class="columns">
+          <div class="column-card" style="padding: 0;">
+            <h4 style="margin: 0 0 12px 0;">Ventajas de tener el cuerpo que quiero</h4>
+            <div class="add-row">
+              <input id="saludVentajaInput" placeholder="Ej: más energía, mejor humor, sentirme libre..." />
+              <button type="button" data-action="salud-agregar-ventaja">+</button>
+            </div>
+            <div id="saludVentajasLista"></div>
+          </div>
+
+          <div class="column-card" style="padding: 0;">
+            <h4 style="margin: 0 0 12px 0;">Inconvenientes de tenerlo</h4>
+            <div class="add-row">
+              <input id="saludInconvenienteInput" placeholder="Ej: atraer demasiada atención, tener que mantenerlo, dejar la excusa..." />
+              <button type="button" data-action="salud-agregar-inconveniente">+</button>
+            </div>
+            <div id="saludInconvenientesLista"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>8. Visualizar tu cuerpo ideal</h3>
+        <div class="mini-card">
+          <p>
+            Imaginá tu cuerpo ideal con todos tus sentidos: su aspecto, sus sensaciones, su
+            grado de salud. Soltá los deseos de aprobación, control o seguridad, y las
+            objeciones que aparezcan. Al mismo tiempo, aceptá tu cuerpo tal como es ahora:
+            no hay contradicción.
+          </p>
+        </div>
+
+        <label>
+          Describí tu cuerpo ideal:
+          <textarea id="saludVisualizacionInput" placeholder="Ej: veo un cuerpo ágil y fuerte, siento energía, escucho mi respiración tranquila..." rows="4"></textarea>
+        </label>
+
+        <h4 style="margin-top: 16px;">Objeciones o creencias limitantes</h4>
+        <div class="add-row">
+          <input id="saludObjecionInput" placeholder="Ej: no es posible, soy así para siempre, no lo merezco..." />
+          <button type="button" data-action="salud-agregar-objecion">+</button>
+        </div>
+        <div id="saludObjecionesLista"></div>
+
+        <p class="miedo-pregunta" style="margin-top: 16px;">
+          ¿Podrías aceptar tu imagen ideal por completo, sabiendo que está bien tenerla y que
+          también está bien que tu cuerpo sea como es?
+        </p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-salud-acepta-ideal="si">Sí, la acepto</button>
+          <button type="button" class="button small secondary" data-salud-acepta-ideal="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-salud-acepta-ideal="todavia_no">Todavía no</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>9. Cierre</h3>
+        <label>
+          Intensidad del malestar ahora: <strong id="saludIntensidadFinalTexto">5</strong>/10
+          <input type="range" id="saludIntensidadFinal" min="0" max="10" value="5" />
+        </label>
+
+        <label>
+          Beneficio o cambio notado
+          <input id="saludBeneficioInput" placeholder="Ej: me siento más en paz con mi cuerpo, duermo mejor, me acepto más..." />
+        </label>
+      </div>
+
+      <div class="card">
+        <button type="button" class="button" data-action="guardar-salud-diario">
+          Guardar en el diario
+        </button>
+        <button type="button" class="button ghost" data-action="reiniciar-salud">
+          Reiniciar ejercicio
+        </button>
+        <p class="small" style="margin-top: 12px;">
+          Los cambios se guardan automáticamente en este navegador.
+        </p>
+      </div>
+    </section>
+
+    <!-- EJERCICIO DE TRABAJO -->
+    <section id="view-ejercicio-trabajo" class="view">
+      <div class="card">
+        <h2>Libertad y eficacia en el trabajo</h2>
+        <p>
+          Soltar tus reacciones te permite pensar con más claridad, actuar con más
+          decisión y sentirte tranquilo en el trabajo, incluso bajo presión. Aunque
+          seas la única persona de tu organización que libere, puedes cambiar por
+          completo tu experiencia laboral.
+        </p>
+
+        <label>
+          Situación de trabajo con la que trabajar
+          <input id="trabajoTemaInput" placeholder="Ej: un proyecto, mi jefe, una negociación, el equipo..." />
+        </label>
+
+        <label>
+          Intensidad del malestar con este tema: <strong id="trabajoIntensidadInicialTexto">5</strong>/10
+          <input type="range" id="trabajoIntensidadInicial" min="0" max="10" value="5" />
+        </label>
+      </div>
+
+      <div class="card">
+        <h3>1. Delegar y soltar el microcontrol</h3>
+        <p class="small">
+          Cuando sueltas el deseo de controlar al personal que depende de ti, dejas de
+          microdirigir y delegás responsabilidades con más facilidad. Liberar también las
+          tareas delegadas hace que se realicen.
+        </p>
+
+        <label>
+          ¿Qué tarea te cuesta delegar?
+          <input id="trabajoDelegarTareaInput" placeholder="Ej: preparar el informe, atender a un cliente, coordinar al equipo..." />
+        </label>
+
+        <p class="miedo-pregunta">¿De qué deseo procede tu necesidad de controlar?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-trabajo-delegar-deseo="aprobacion">Aprobación</button>
+          <button type="button" class="button small secondary" data-trabajo-delegar-deseo="control">Control</button>
+          <button type="button" class="button small secondary" data-trabajo-delegar-deseo="seguridad">Seguridad</button>
+        </div>
+
+        <p class="miedo-pregunta">¿Podrías soltar el deseo de microdirigir?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-trabajo-delegar-soltaria-deseo="si">Sí, lo suelto</button>
+          <button type="button" class="button small secondary" data-trabajo-delegar-soltaria-deseo="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-trabajo-delegar-soltaria-deseo="todavia_no">Todavía no</button>
+        </div>
+
+        <label>
+          Dudas sobre la persona en quien delegás (si las hay)
+          <input id="trabajoDelegarDudasInput" placeholder="Ej: no va a hacerlo como corresponde, no llega a tiempo..." />
+        </label>
+
+        <p class="miedo-pregunta">¿Podrías soltar las dudas sobre esa persona?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-trabajo-delegar-soltaria-dudas="si">Sí, las suelto</button>
+          <button type="button" class="button small secondary" data-trabajo-delegar-soltaria-dudas="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-trabajo-delegar-soltaria-dudas="todavia_no">Todavía no</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>2. Resistencia a tareas repetitivas</h3>
+        <p class="small">
+          Para cada tarea que te cuesta hacer a diario, soltá la resistencia a hacerla y
+          la resistencia a no hacerla.
+        </p>
+
+        <div class="add-row">
+          <input id="trabajoTareaInput" placeholder="Ej: contestar mails, cargar datos, llamar a clientes, los partes..." />
+          <button type="button" data-action="trabajo-agregar-tarea">+</button>
+        </div>
+        <div id="trabajoTareasLista"></div>
+      </div>
+
+      <div class="card">
+        <h3>3. Presión de plazos</h3>
+        <p class="small">
+          Cuando te apuras o te agobias por los plazos, disminuye tu eficacia. Suelta la
+          presión adoptando la actitud de que dispones de todo el tiempo del mundo:
+          haz lo que hagas cuando lo estés haciendo.
+        </p>
+
+        <label>
+          ¿Qué te está apurando ahora mismo?
+          <input id="trabajoPresionPlazoInput" placeholder="Ej: la fecha de entrega, una reunión, la facturación del mes..." />
+        </label>
+
+        <p class="miedo-pregunta">¿Podrías soltar la presión y disponer de todo el tiempo del mundo?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-trabajo-plazo-suelta="si">Sí, la suelto</button>
+          <button type="button" class="button small secondary" data-trabajo-plazo-suelta="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-trabajo-plazo-suelta="todavia_no">Todavía no</button>
+        </div>
+
+        <label>
+          Sentimiento sobre cómo estás usando tu tiempo
+          <input id="trabajoSentimientoTiempoInput" placeholder="Ej: frustración por lo que no termino, culpa por interrumpir, apuro..." />
+        </label>
+
+        <p class="miedo-pregunta">¿Podrías soltarlo?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-trabajo-tiempo-suelta="si">Sí, lo suelto</button>
+          <button type="button" class="button small secondary" data-trabajo-tiempo-suelta="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-trabajo-tiempo-suelta="todavia_no">Todavía no</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>4. Vender con eficacia</h3>
+        <div class="mini-card">
+          <p>
+            En toda interacción vendes tus ideas y te vendes a ti mismo. En vez de ansiar
+            el acuerdo o cerrar el trato, soltá: buscá ver la interacción desde el punto de
+            vista del otro y conectar con la persona, no con la transacción.
+          </p>
+        </div>
+
+        <label>
+          ¿Qué interacción, venta o negociación tenés en mente?
+          <input id="trabajoSituacionVentaInput" placeholder="Ej: presentar una propuesta, pedir aumento, convencer a un cliente..." />
+        </label>
+
+        <p class="miedo-pregunta">¿Podrías soltar el deseo de aprobación, control o seguridad en esa interacción?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-trabajo-venta-suelta="si">Sí, lo suelto</button>
+          <button type="button" class="button small secondary" data-trabajo-venta-suelta="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-trabajo-venta-suelta="todavia_no">Todavía no</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>5. Decisiones sólidas</h3>
+        <p class="small">
+          Cuando dudes sobre qué decisión tomar, el Proceso de Ventajas/Inconvenientes te
+          ahorra tiempo, energía y frustración, y te permite decidir con más seguridad.
+        </p>
+
+        <label>
+          ¿Qué decisión estás considerando?
+          <input id="trabajoDecisionInput" placeholder="Ej: cambiar de puesto, aceptar un proyecto, renunciar, contratar a alguien..." />
+        </label>
+
+        <div class="columns">
+          <div class="column-card" style="padding: 0;">
+            <h4 style="margin: 0 0 12px 0;">Ventajas</h4>
+            <div class="add-row">
+              <input id="trabajoVentajaInput" placeholder="Ej: más crecimiento, mejor sueldo, aprender..." />
+              <button type="button" data-action="trabajo-agregar-ventaja">+</button>
+            </div>
+            <div id="trabajoVentajasLista"></div>
+          </div>
+
+          <div class="column-card" style="padding: 0;">
+            <h4 style="margin: 0 0 12px 0;">Inconvenientes</h4>
+            <div class="add-row">
+              <input id="trabajoInconvenienteInput" placeholder="Ej: más viajes, menos tiempo libre, riesgo..." />
+              <button type="button" data-action="trabajo-agregar-inconveniente">+</button>
+            </div>
+            <div id="trabajoInconvenientesLista"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>6. Trabajar con gente difícil</h3>
+        <p class="small">
+          Casi todos hemos trabajado con un jefe, empleado o colega difícil. Esas
+          interacciones nos amargaban la vida hasta que soltamos el deseo de aprobación,
+          control y seguridad en relación con esas personas. El procedimiento de limpieza
+          es ideal antes y después de reuniones o interacciones con clientes.
+        </p>
+
+        <label>
+          ¿Con quién te cuesta trabajar?
+          <input id="trabajoPersonaDificilInput" placeholder="Ej: mi jefe, un colega, un cliente, una persona a mi cargo..." />
+        </label>
+
+        <p class="miedo-pregunta">¿Podrías soltar el deseo de aprobación, control o seguridad con esa persona?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-trabajo-persona-suelta="si">Sí, lo suelto</button>
+          <button type="button" class="button small secondary" data-trabajo-persona-suelta="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-trabajo-persona-suelta="todavia_no">Todavía no</button>
+        </div>
+
+        <button type="button" class="button" data-action="trabajo-abrir-limpieza" style="margin-top: 12px;">
+          Abrir procedimiento de limpieza
+        </button>
+      </div>
+
+      <div class="card">
+        <h3>7. Cierre</h3>
+        <label>
+          Intensidad del malestar ahora: <strong id="trabajoIntensidadFinalTexto">5</strong>/10
+          <input type="range" id="trabajoIntensidadFinal" min="0" max="10" value="5" />
+        </label>
+
+        <label>
+          Beneficio o cambio notado
+          <input id="trabajoBeneficioInput" placeholder="Ej: pienso con más claridad, actúo con más decisión, me siento tranquilo..." />
+        </label>
+      </div>
+
+      <div class="card">
+        <button type="button" class="button" data-action="guardar-trabajo-diario">
+          Guardar en el diario
+        </button>
+        <button type="button" class="button ghost" data-action="reiniciar-trabajo">
+          Reiniciar ejercicio
+        </button>
+        <p class="small" style="margin-top: 12px;">
+          Los cambios se guardan automáticamente en este navegador.
+        </p>
+      </div>
+    </section>
+
+    <!-- EJERCICIO DE MUNDO -->
+    <section id="view-ejercicio-mundo" class="view">
+      <div class="card">
+        <h2>Paz y serenidad con el mundo</h2>
+        <p>
+          Las noticias y los problemas del mundo son una fuente importante de estrés diario.
+          No se trata de obsesionarse con ellos ni de desconectarse: al liberar tus reacciones
+          mientras te mantienes informado, haces tu aportación al mundo sin necesidad de
+          ninguna acción concreta.
+        </p>
+
+        <label>
+          Intensidad del malestar: <strong id="mundoIntensidadInicialTexto">5</strong>/10
+          <input type="range" id="mundoIntensidadInicial" min="0" max="10" value="5" />
+        </label>
+      </div>
+
+      <div class="card">
+        <h3>1. Liberar al ver o leer noticias</h3>
+        <p class="small">
+          Para soltar cualquier sentimiento que te generen las noticias (enfado, ansiedad,
+          resistencia), imaginá el mundo tal como quisieras que fuera y soltá todo lo que
+          indique que ese mundo no es posible.
+        </p>
+
+        <label>
+          ¿Qué noticia o tema del mundo te genera reacción?
+          <input id="mundoNoticiaInput" placeholder="Ej: la guerra, la inflación, la contaminación, la política..." />
+        </label>
+
+        <label>
+          Imaginá el mundo tal como quisieras que fuera:
+          <textarea id="mundoVisualizacionInput" placeholder="Ej: veo gente cooperando, escucho acuerdos, siento calma y seguridad..." rows="4"></textarea>
+        </label>
+
+        <h4 style="margin-top: 16px;">Pensamientos o sentimientos opuestos</h4>
+        <div class="add-row">
+          <input id="mundoObjecionInput" placeholder="Ej: eso no es posible, siempre va a ser así, soy ingenuo..." />
+          <button type="button" data-action="mundo-agregar-objecion">+</button>
+        </div>
+        <div id="mundoObjecionesLista"></div>
+
+        <p class="miedo-pregunta" style="margin-top: 16px;">
+          ¿Podrías aceptar el mundo tal como es, soltando el deseo de cambiarlo?
+        </p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-mundo-acepta="si">Sí, lo acepto</button>
+          <button type="button" class="button small secondary" data-mundo-acepta="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-mundo-acepta="todavia_no">Todavía no</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>2. Pensar en soluciones</h3>
+        <p class="small">
+          Si somos anti algo, lo mantenemos en la mente con fuerza. Enviamos energía a lo que
+          albergamos. Pensá en la solución, no en el problema: en vez de estar en contra de la
+          contaminación, está a favor del medio ambiente.
+        </p>
+
+        <label>
+          ¿En contra de qué estás?
+          <input id="mundoContraQueInput" placeholder="Ej: la discriminación, la guerra, la contaminación..." />
+        </label>
+
+        <label>
+          ¿A favor de qué querés estar?
+          <input id="mundoAFavorInput" placeholder="Ej: la igualdad, la paz, el medio ambiente..." />
+        </label>
+
+        <p class="miedo-pregunta">¿Podrías soltar la energía "anti" y pasar a estar a favor de la solución?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-mundo-suelta-anti="si">Sí, lo suelto</button>
+          <button type="button" class="button small secondary" data-mundo-suelta-anti="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-mundo-suelta-anti="todavia_no">Todavía no</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>3. Apoyar a tus dirigentes</h3>
+        <p class="small">
+          Los líderes se vuelven pararrayos de lo que no nos gusta del mundo. Participá y votá
+          a quien prefieras, pero ayudá al que gane: soltá las reacciones interiores que el
+          resultado te produzca.
+        </p>
+
+        <label>
+          ¿Qué figura pública o dirigente te genera rechazo?
+          <input id="mundoLiderInput" placeholder="Ej: un presidente, un ministro, un funcionario..." />
+        </label>
+
+        <p class="miedo-pregunta">¿Podrías soltar el deseo de aprobación, control o seguridad con esa persona?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-mundo-suelta-lider="si">Sí, lo suelto</button>
+          <button type="button" class="button small secondary" data-mundo-suelta-lider="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-mundo-suelta-lider="todavia_no">Todavía no</button>
+        </div>
+
+        <button type="button" class="button" data-action="mundo-abrir-limpieza" style="margin-top: 12px;">
+          Abrir procedimiento de limpieza
+        </button>
+      </div>
+
+      <div class="card">
+        <h3>4. Ejercer la amabilidad y el cariño</h3>
+        <p class="small">
+          Dar sin desear nada a cambio ayuda al mundo y te ayuda a ti. Dos claves: dar sin
+          esperar reconocimiento, y ver a quienes ayudás como ya completos, tal como son,
+          no como personas imperfectas que necesitan ser salvadas.
+        </p>
+
+        <label>
+          ¿Cómo podés dar a tu comunidad o a alguien cercano?
+          <input id="mundoAmabilidadInput" placeholder="Ej: servicio, conocimientos, amabilidad, respeto, tiempo..." />
+        </label>
+
+        <p class="miedo-pregunta">¿Podrías soltar el deseo de reconocimiento o de recibir algo a cambio?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-mundo-suelta-reconocimiento="si">Sí, lo suelto</button>
+          <button type="button" class="button small secondary" data-mundo-suelta-reconocimiento="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-mundo-suelta-reconocimiento="todavia_no">Todavía no</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>5. Cierre</h3>
+        <label>
+          Intensidad del malestar ahora: <strong id="mundoIntensidadFinalTexto">5</strong>/10
+          <input type="range" id="mundoIntensidadFinal" min="0" max="10" value="5" />
+        </label>
+
+        <label>
+          Beneficio o cambio notado
+          <input id="mundoBeneficioInput" placeholder="Ej: las noticias me afectan menos, me siento más en paz, veo soluciones..." />
+        </label>
+      </div>
+
+      <div class="card">
+        <button type="button" class="button" data-action="guardar-mundo-diario">
+          Guardar en el diario
+        </button>
+        <button type="button" class="button ghost" data-action="reiniciar-mundo">
+          Reiniciar ejercicio
+        </button>
+        <p class="small" style="margin-top: 12px;">
+          Los cambios se guardan automáticamente en este navegador.
+        </p>
+      </div>
+    </section>
+
+    <!-- EJERCICIO: LOS 9 ESTADOS EMOCIONALES -->
+    <section id="view-ejercicio-estados" class="view">
+      <div class="card">
+        <h2>Mapa de los 9 estados emocionales</h2>
+        <p>
+          Inherentes a nosotros existen nueve estados emocionales, ordenados a lo largo de una
+          escala de energía y acción. En la apatía casi no disponemos de energía y emprendemos
+          poca o ninguna acción; cada estado sucesivo tiene más energía hasta llegar a la paz.
+        </p>
+        <p class="small">
+          Los seis primeros forman una delgada corteza que encubre el coraje, la aceptación y
+          la paz, lo que realmente eres. Al soltar la apatía, la pena, el miedo, el deseo, la
+          ira y el orgullo, vas desvelando esas emociones de energía superior.
+        </p>
+        <p class="small">
+          Elegí el estado que estás sintiendo ahora (o el que quieras trabajar), revisá las
+          palabras asociadas y liberá con las cuatro preguntas.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>1. ¿Qué estado estás sintiendo?</h3>
+        <div id="estadosSelector"></div>
+
+        <label style="margin-top: 16px;">
+          Intensidad del malestar: <strong id="estadosIntensidadInicialTexto">5</strong>/10
+          <input type="range" id="estadosIntensidadInicial" min="0" max="10" value="5" />
+        </label>
+      </div>
+
+      <div class="card" id="estadosDetalleCard">
+        <h3 id="estadosDetalleTitulo">Seleccioná un estado para verlo</h3>
+        <p id="estadosDetalleDescripcion" class="small"></p>
+        <div id="estadosPalabras" class="word-chips"></div>
+
+        <label style="margin-top: 16px;">
+          Recordá la última vez que sentiste este estado:
+          <textarea id="estadosRecuerdoInput" rows="3" placeholder="Ej: el lunes en el trabajo, con mi familia, en el tráfico..."></textarea>
+        </label>
+      </div>
+
+      <div class="card">
+        <h3>2. Las cuatro preguntas de liberación</h3>
+        <p class="small">
+          Pensá en el sentimiento del estado elegido y respondé con honestidad.
+        </p>
+
+        <p class="miedo-pregunta">¿Podrías aceptar este sentimiento lo mejor que puedas?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-estados-acepta="si">Sí</button>
+          <button type="button" class="button small secondary" data-estados-acepta="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-estados-acepta="todavia_no">Todavía no</button>
+        </div>
+
+        <p class="miedo-pregunta">¿Podrías soltarlo?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-estados-suelta="si">Sí</button>
+          <button type="button" class="button small secondary" data-estados-suelta="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-estados-suelta="todavia_no">Todavía no</button>
+        </div>
+
+        <p class="miedo-pregunta">¿Lo soltarías?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-estados-soltarias="si">Sí</button>
+          <button type="button" class="button small secondary" data-estados-soltarias="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-estados-soltarias="todavia_no">Todavía no</button>
+        </div>
+
+        <p class="miedo-pregunta">¿Cuándo?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-estados-cuando="ahora">Ahora</button>
+          <button type="button" class="button small secondary" data-estados-cuando="no_se">No lo sé</button>
+        </div>
+
+        <p class="small" style="margin-top: 12px;">
+          Repetí las preguntas unas cuantas veces más hasta que sientas que pudiste soltar
+          parte o todo lo que estabas sintiendo.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>3. Cierre</h3>
+        <label>
+          Intensidad del malestar ahora: <strong id="estadosIntensidadFinalTexto">5</strong>/10
+          <input type="range" id="estadosIntensidadFinal" min="0" max="10" value="5" />
+        </label>
+
+        <label>
+          Beneficio o cambio notado
+          <input id="estadosBeneficioInput" placeholder="Ej: el miedo bajó, me veo menos atascado, reconozco mi orgullo..." />
+        </label>
+      </div>
+
+      <div class="card">
+        <button type="button" class="button" data-action="guardar-estados-diario">
+          Guardar en el diario
+        </button>
+        <button type="button" class="button ghost" data-action="reiniciar-estados">
+          Reiniciar ejercicio
+        </button>
+        <p class="small" style="margin-top: 12px;">
+          Los cambios se guardan automáticamente en este navegador.
+        </p>
+      </div>
+    </section>
+
+    <!-- EJERCICIO: SERENIDAD / QUERER CAMBIAR -->
+    <section id="view-ejercicio-serenidad" class="view">
+      <div class="card">
+        <h2>Tu clave para la serenidad</h2>
+        <p>
+          Cuando algo no te gusta y deseas que sea distinto, el simple deseo de cambiarlo
+          mantiene el problema presente en tu mente. La solución es soltar el sentimiento
+          de querer cambiar eso.
+        </p>
+        <p class="small">
+          "Concédeme Señor, la serenidad para aceptar las cosas que no puedo cambiar, la
+          valentía para cambiar las que puedo cambiar, y la sabiduría para ver la
+          diferencia." — Oraci&oacute;n de la serenidad.
+        </p>
+        <p class="small">
+          Si lo que no podés cambiar, al soltar el deseo lo aceptás sin esfuerzo. Si algo
+          sí debe cambiar, soltar te ayuda a ponerte en acción fácilmente. Esta es la
+          válvula de seguridad del método: usala cuando te atascas o no sabés cómo soltar.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>1. Lo que querés cambiar</h3>
+        <label>
+          ¿Qué cosa de tu vida te gustaría que fuera distinta?
+          <input id="serenidadQueInput" placeholder="Ej: mi trabajo, el comportamiento de alguien, un recuerdo, cómo me siento..." />
+        </label>
+
+        <p class="miedo-pregunta">¿Te gustaría cambiarlo?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-serenidad-quieres-cambiar="si">Sí</button>
+          <button type="button" class="button small secondary" data-serenidad-quieres-cambiar="no_se">No lo sé</button>
+        </div>
+        <p class="small">
+          La respuesta casi siempre es "sí". Reconocerlo y luego soltar el deseo de cambiar
+          es lo que libera.
+        </p>
+
+        <label style="margin-top: 16px;">
+          Intensidad del malestar: <strong id="serenidadIntensidadInicialTexto">5</strong>/10
+          <input type="range" id="serenidadIntensidadInicial" min="0" max="10" value="5" />
+        </label>
+      </div>
+
+      <div class="card">
+        <h3>2. El proceso</h3>
+        <p class="small">
+          Respondé con honestidad. Repetí las rondas hasta que sientas que el deseo de
+          cambiar se afloja.
+        </p>
+
+        <p class="miedo-pregunta">¿Podrías permitirte aceptar este sentimiento de atasco lo mejor que sepas?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-serenidad-acepta="si">Sí</button>
+          <button type="button" class="button small secondary" data-serenidad-acepta="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-serenidad-acepta="todavia_no">Todavía no</button>
+        </div>
+
+        <p class="miedo-pregunta">¿Podrías permitirte tener el deseo de cambiar esta situación?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-serenidad-tener-deseo="si">Sí</button>
+          <button type="button" class="button small secondary" data-serenidad-tener-deseo="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-serenidad-tener-deseo="todavia_no">Todavía no</button>
+        </div>
+
+        <p class="miedo-pregunta">¿Podrías soltar el deseo de cambiar esta situación?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-serenidad-suelta="si">Sí</button>
+          <button type="button" class="button small secondary" data-serenidad-suelta="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-serenidad-suelta="todavia_no">Todavía no</button>
+        </div>
+
+        <p class="miedo-pregunta">¿Lo harías?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-serenidad-harias="si">Sí</button>
+          <button type="button" class="button small secondary" data-serenidad-harias="no_se">No lo sé</button>
+        </div>
+
+        <p class="miedo-pregunta">¿Cuándo?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-serenidad-cuando="ahora">Ahora</button>
+          <button type="button" class="button small secondary" data-serenidad-cuando="no_se">No lo sé</button>
+        </div>
+
+        <label style="margin-top: 16px;">
+          ¿Cómo te sentís ahora? ¿Más ligero? ¿Sigue el deseo de cambiarlo?
+          <textarea id="serenidadObservacionInput" rows="3" placeholder="Ej: me siento más tranquilo, el problema se ve más pequeño, todavía lo quiero cambiar..."></textarea>
+        </label>
+
+        <div class="mini-card">
+          <p class="small">
+            Rondas de liberación completadas: <strong id="serenidadRondasTexto">0</strong>
+          </p>
+          <button type="button" class="button" data-action="serenidad-repetir" style="margin-top: 12px;">
+            Terminé esta ronda: empezar otra
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>3. Cierre</h3>
+        <label>
+          Intensidad del malestar ahora: <strong id="serenidadIntensidadFinalTexto">5</strong>/10
+          <input type="range" id="serenidadIntensidadFinal" min="0" max="10" value="5" />
+        </label>
+
+        <label>
+          Beneficio o cambio notado
+          <input id="serenidadBeneficioInput" placeholder="Ej: lo acepto más fácil, me dio claridad para actuar, el atasco bajó..." />
+        </label>
+      </div>
+
+      <div class="card">
+        <button type="button" class="button" data-action="guardar-serenidad-diario">
+          Guardar en el diario
+        </button>
+        <button type="button" class="button ghost" data-action="reiniciar-serenidad">
+          Reiniciar ejercicio
+        </button>
+        <p class="small" style="margin-top: 12px;">
+          Los cambios se guardan automáticamente en este navegador.
+        </p>
+      </div>
+    </section>
+
+    <!-- EJERCICIO: SUMERGIRSE -->
+    <section id="view-ejercicio-sumergir" class="view">
+      <div class="card warning-card">
+        <h2>Sumergirse</h2>
+        <p>
+          Es una forma de liberación profunda. No intentes sumergirte mientras hacés otra
+          cosa: funciona mucho mejor cuando te tomás tiempo para centrarte en tu interior
+          y estás en contacto con un sentimiento fuerte.
+        </p>
+        <p class="small">
+          Todos los sentimientos, excepto la paz, están en la superficie. Si el sentimiento
+          sigue siendo fuerte o incluso se intensifica, es que todavía no llegaste al núcleo.
+          Si te atascás, no te sientas completo o la emoción no afloja, pasá a otra forma de
+          liberación.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>1. El sentimiento a explorar</h3>
+        <label>
+          ¿Qué emoción querés explorar?
+          <select id="sumergirEmocion"></select>
+        </label>
+
+        <label>
+          ¿Con qué situación o sentimiento te querés sumergir?
+          <input id="sumergirSentimientoInput" placeholder="Ej: esa pena que traigo desde hace años, el miedo a hablar en público..." />
+        </label>
+
+        <label style="margin-top: 16px;">
+          Intensidad actual: <strong id="sumergirIntensidadInicialTexto">5</strong>/10
+          <input type="range" id="sumergirIntensidadInicial" min="0" max="10" value="5" />
+        </label>
+      </div>
+
+      <div class="card">
+        <h3>2. La inmersión</h3>
+        <p class="small">
+          Sentate, cerrá los ojos y relajate ante el sentimiento lo mejor que puedas.
+          Luego respondé con honestidad. Si aparece una imagen, sensación o historia,
+          pasá de largo: seguí descendiendo.
+        </p>
+
+        <label>
+          ¿Qué hay en el núcleo de este sentimiento?
+          <textarea id="sumergirNucleoInput" rows="3" placeholder="Ej: me siento solo y sin valor, un vacío en el pecho, el recuerdo de aquella traición..."></textarea>
+        </label>
+
+        <p class="miedo-pregunta">¿Podrías permitirte adentrarte conscientemente en ese núcleo?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-sumergir-adentrarse="si">Sí</button>
+          <button type="button" class="button small secondary" data-sumergir-adentrarse="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-sumergir-adentrarse="todavia_no">Todavía no</button>
+        </div>
+
+        <p class="miedo-pregunta">¿Podrías permitirte sumergirte en él?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-sumergir-sumergir="si">Sí</button>
+          <button type="button" class="button small secondary" data-sumergir-sumergir="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-sumergir-sumergir="todavia_no">Todavía no</button>
+        </div>
+
+        <p class="miedo-pregunta">¿Podrías profundizar aún más?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-sumergir-profundizar="si">Sí</button>
+          <button type="button" class="button small secondary" data-sumergir-profundizar="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-sumergir-profundizar="todavia_no">Todavía no</button>
+        </div>
+
+        <div class="mini-card">
+          <p class="small">
+            Niveles de profundidad alcanzados: <strong id="sumergirNivelesTexto">0</strong>
+          </p>
+          <button type="button" class="button" data-action="sumergir-seguir" style="margin-top: 12px;">
+            Seguir profundizando
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>3. El resultado</h3>
+        <p class="small">
+          Sabés que llegaste al núcleo cuando tenés el espíritu tranquilo y te sentís en paz
+          por dentro. Puede que te veas bañado por una luz interior o rodeado de un silencio
+          cálido.
+        </p>
+
+        <p class="miedo-pregunta">¿Sentís el espíritu tranquilo y en paz interiormente?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-sumergir-paz="si">Sí</button>
+          <button type="button" class="button small secondary" data-sumergir-paz="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-sumergir-paz="todavia_no">Todavía no</button>
+        </div>
+
+        <label style="margin-top: 16px;">
+          Intensidad del sentimiento ahora: <strong id="sumergirIntensidadFinalTexto">5</strong>/10
+          <input type="range" id="sumergirIntensidadFinal" min="0" max="10" value="5" />
+        </label>
+
+        <label>
+          Beneficio o cambio notado
+          <input id="sumergirBeneficioInput" placeholder="Ej: llegué al núcleo y me disolvió, apareció paz, la pena era solo superficie..." />
+        </label>
+      </div>
+
+      <div class="card">
+        <button type="button" class="button" data-action="guardar-sumergir-diario">
+          Guardar en el diario
+        </button>
+        <button type="button" class="button ghost" data-action="reiniciar-sumergir">
+          Reiniciar ejercicio
+        </button>
+        <p class="small" style="margin-top: 12px;">
+          Los cambios se guardan automáticamente en este navegador.
+        </p>
+      </div>
+    </section>
+
+    <!-- EJERCICIO: NO HAY NINGÚN PROBLEMA -->
+    <section id="view-ejercicio-problema" class="view">
+      <div class="card">
+        <h2>La exploración: no hay ningún problema</h2>
+        <p>
+          En el momento actual no hay ningún problema. Todos los supuestos problemas que
+          tenés en este preciso momento no son más que recuerdos. Parece que los problemas
+          persisten porque, cada vez que no están aquí AHORA, salimos a buscarlos.
+        </p>
+        <p class="small">
+          Te invito a contemplar al menos la posibilidad de que tus problemas no sean más
+          que recuerdos, y a estar abierto a lo que descubras.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>1. El problema como recuerdo</h3>
+        <p class="small">
+          Pensá en un problema que solías pensar que tenías. Formulalo en pasado. Si te
+          cuesta, considerá el momento más reciente como parte del pasado: es pasado todo
+          lo que no ocurre en este preciso momento, incluso lo ocurrido hace un segundo.
+        </p>
+        <label>
+          ¿Qué problema solías pensar que tenías?
+          <input id="problemaQueInput" placeholder="Ej: solía pensar que tenía un problema con mi pareja, con el dinero, con mi salud..." />
+        </label>
+        <label style="margin-top: 16px;">
+          Intensidad del malestar: <strong id="problemaIntensidadInicialTexto">5</strong>/10
+          <input type="range" id="problemaIntensidadInicial" min="0" max="10" value="5" />
+        </label>
+      </div>
+
+      <div class="card">
+        <h3>2. Las preguntas</h3>
+
+        <p class="miedo-pregunta">¿Podrías permitirte recordar cómo solías pensar que tenías ese problema?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-problema-recordar="si">Sí</button>
+          <button type="button" class="button small secondary" data-problema-recordar="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-problema-recordar="todavia_no">Todavía no</button>
+        </div>
+
+        <p class="miedo-pregunta">¿Te gustaría cambiar eso que proviene del pasado?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-problema-cambiar="si">Sí</button>
+          <button type="button" class="button small secondary" data-problema-cambiar="no">No</button>
+        </div>
+
+        <p class="miedo-pregunta">¿Podrías soltar el deseo de cambiar eso que proviene del pasado?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-problema-soltar-cambio="si">Sí</button>
+          <button type="button" class="button small secondary" data-problema-soltar-cambio="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-problema-soltar-cambio="todavia_no">Todavía no</button>
+        </div>
+
+        <p class="miedo-pregunta">¿Podrías soltar el deseo de creer que tenés de nuevo ese problema?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-problema-soltar-creer="si">Sí</button>
+          <button type="button" class="button small secondary" data-problema-soltar-creer="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-problema-soltar-creer="todavia_no">Todavía no</button>
+        </div>
+
+        <div class="mini-card">
+          <p class="small">
+            Pasadas de liberación: <strong id="problemaPasadasTexto">0</strong>
+          </p>
+          <button type="button" class="button" data-action="problema-repetir" style="margin-top: 12px;">
+            Repetir desde el principio
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>3. Cierre</h3>
+        <label>
+          Intensidad del malestar ahora: <strong id="problemaIntensidadFinalTexto">5</strong>/10
+          <input type="range" id="problemaIntensidadFinal" min="0" max="10" value="5" />
+        </label>
+
+        <label>
+          Beneficio o cambio notado
+          <input id="problemaBeneficioInput" placeholder="Ej: me reí al darme cuenta de que era un recuerdo, me alivié, todavía lo siento presente..." />
+        </label>
+      </div>
+
+      <div class="card">
+        <button type="button" class="button" data-action="guardar-problema-diario">
+          Guardar en el diario
+        </button>
+        <button type="button" class="button ghost" data-action="reiniciar-problema">
+          Reiniciar ejercicio
+        </button>
+        <p class="small" style="margin-top: 12px;">
+          Los cambios se guardan automáticamente en este navegador.
+        </p>
+      </div>
+    </section>
+
+    <!-- EJERCICIO: LOS SEIS PASOS -->
+    <section id="view-ejercicio-pasos" class="view">
+      <div class="card">
+        <h2>Los Seis Pasos</h2>
+        <p class="small">
+          La síntesis de la esencia del Método Sedona, ideada por Lester Levenson. Tené la
+          lista ante los ojos cuando liberes; si te atascás, mirala y te ayudará a seguir.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>1. Queré más la libertad</h3>
+        <p>
+          Permitite querer más la libertad/imperturbabilidad (tu objetivo) que el deseo de
+          aprobación, control, seguridad y separación. Ante un estancamiento preguntate:
+        </p>
+        <p class="small"><em>¿Prefiero este estancamiento, o prefiero ser libre?</em></p>
+      </div>
+
+      <div class="card">
+        <h3>2. Decidí que podés liberar</h3>
+        <p>
+          Cada vez que liberás es solo una decisión, una simple elección. Tomala en cada
+          momento del día: decidí que podés liberar y ser libre/imperturbable.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>3. Sentí los cuatro deseos y soltalos</h3>
+        <p>
+          Permitite percibir que todos tus sentimientos culminan en los cuatro deseos:
+          aprobación, control, seguridad y separación. Luego permitite soltar los deseos.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>4. Sé constante</h3>
+        <p>
+          Liberá el deseo de aprobación, control, seguridad y separación en todo momento,
+          estés solo o con otras personas. Toda caída es una oportunidad para llegar más alto.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>5. Si te atascás, soltá el deseo de cambiar o controlar</h3>
+        <p>
+          Es la válvula de seguridad. Soltá el deseo de cambiarlo o controlarlo si te sentís
+          abrumado, te alejás de la liberación, olvidaste liberar, creés que no podés soltar,
+          no estás seguro de lo que sentís o simplemente querés soltar AHORA.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>6. Soltar te hace más ligero</h3>
+        <p>
+          Siempre que liberás, sos más ligero, más feliz y más eficiente. Si lo hacés de
+          manera continua, siempre lo serás.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Tu sesión de hoy</h3>
+        <label>
+          ¿Qué sentimiento o estancamiento trabajaste hoy?
+          <input id="pasosQueInput" placeholder="Ej: un enojo con alguien, el miedo a hablar, nada en particular..." />
+        </label>
+
+        <p class="miedo-pregunta">¿En qué paso te detuviste?</p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-pasos-paso="1">1</button>
+          <button type="button" class="button small secondary" data-pasos-paso="2">2</button>
+          <button type="button" class="button small secondary" data-pasos-paso="3">3</button>
+          <button type="button" class="button small secondary" data-pasos-paso="4">4</button>
+          <button type="button" class="button small secondary" data-pasos-paso="5">5</button>
+          <button type="button" class="button small secondary" data-pasos-paso="6">6</button>
+        </div>
+
+        <label style="margin-top: 16px;">
+          Intensidad del malestar: <strong id="pasosIntensidadInicialTexto">5</strong>/10
+          <input type="range" id="pasosIntensidadInicial" min="0" max="10" value="5" />
+        </label>
+
+        <label>
+          Intensidad después de liberar: <strong id="pasosIntensidadFinalTexto">5</strong>/10
+          <input type="range" id="pasosIntensidadFinal" min="0" max="10" value="5" />
+        </label>
+
+        <label>
+          Beneficio o cambio notado
+          <input id="pasosBeneficioInput" placeholder="Ej: la pregunta '¿prefiero ser libre?' me soltó enseguida..." />
+        </label>
+
+        <button type="button" class="button" data-action="guardar-pasos-diario" style="margin-top: 16px;">
+          Guardar en el diario
+        </button>
+        <button type="button" class="button ghost" data-action="reiniciar-pasos">
+          Reiniciar
+        </button>
+      </div>
+    </section>
+
+    <!-- OBJETIVO: PASO 1 - FORMULACIÓN -->
+    <section id="view-objetivo-formulacion" class="view">
+      <div class="card">
+        <h2>Paso 1: Formulación del objetivo</h2>
+        <p class="small">
+          Escribí tu objetivo siguiendo estas reglas clave.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Reglas de formulación</h3>
+        <div class="mini-card">
+          <ol>
+            <li><strong>En presente:</strong> como si ya estuviera logrado (no "lo haré" o "voy a").</li>
+            <li><strong>En positivo:</strong> incluí lo que querés, no lo que NO querés.</li>
+            <li><strong>Propio:</strong> incluíte a vos en la formulación ("Me permito...", "Puedo...").</li>
+            <li><strong>Sin "querer":</strong> evita la palabra "quiero" (equivale a carencia).</li>
+            <li><strong>Sin medios:</strong> describe el resultado, no cómo lograrlo.</li>
+            <li><strong>Realista:</strong> que tu mente lo acepte como posible.</li>
+            <li><strong>Conciso:</strong> un objetivo por formulación.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Ejemplos de formulación</h3>
+        <div class="mini-card">
+          <p><strong>✓ Bien:</strong> "Me permito tener y disfrutar fácilmente del trabajo que más me conviene."</p>
+          <p><strong>✓ Bien:</strong> "Puedo lograr y mantener sin ansiedad mi peso ideal."</p>
+          <p><strong>✗ Mal:</strong> "Quiero dejar de fumar." (usa "querer" y está en negativo)</p>
+          <p><strong>✓ Bien:</strong> "Me permito disfrutar de ser no fumador."</p>
+          <p><strong>✗ Mal:</strong> "La casa está limpia." (no te incluye a vos)</p>
+          <p><strong>✓ Bien:</strong> "Acepto limpiar fácilmente mi casa."</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Tu objetivo</h3>
+        <label>
+          Escribí tu objetivo formulado según las reglas:
+          <textarea id="objetivoFormulacionInput" placeholder="Ej: Me permito tener una relación amorosa armoniosa y de apoyo mutuo..." rows="3"></textarea>
+        </label>
+
+        <label>
+          Área / Tema
+          <select id="objetivoAreaSelect"></select>
+        </label>
+
+        <div class="mini-card" id="objetivoFormulacionCheck">
+          <p class="small">Revisión rápida:</p>
+          <ul id="objetivoFormulacionLista" class="technique-list"></ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <button type="button" class="button" data-action="objetivo-siguiente-determinar">
+          Siguiente → Determinar objetivo
+        </button>
+        <button type="button" class="button ghost" data-action="objetivo-volver-lista">
+          Volver a biblioteca
+        </button>
+      </div>
+    </section>
+
+    <!-- OBJETIVO: PASO 2 - DETERMINAR -->
+    <section id="view-objetivo-determinar" class="view">
+      <div class="card">
+        <h2>Paso 2: Determinar el objetivo</h2>
+        <p class="small">
+          Lee tu objetivo y observá qué emociones y pensamientos aparecen.
+          Liberá las necesidades ocultas hasta sentir coraje, aceptación o paz.
+        </p>
+      </div>
+
+      <div class="card objetivo-resumen-card">
+        <h3>Tu objetivo:</h3>
+        <p id="objetivoDeterminarTexto" class="objetivo-texto-destacado"></p>
+      </div>
+
+      <div class="card">
+        <h3>¿Qué sentís al leerlo?</h3>
+        <label>
+          Pensamiento o emoción que aparece:
+          <textarea id="objetivoSentimientoInput" placeholder="Ej: Deseo, miedo a no lograrlo, ira, frustración..." rows="2"></textarea>
+        </label>
+
+        <label>
+          Necesidad subyacente (aprobación, control, seguridad):
+          <select id="objetivoNecesidadSelect">
+            <option value="no_se">No identificado</option>
+            <option value="aprobacion">Aprobación</option>
+            <option value="control">Control</option>
+            <option value="seguridad">Seguridad</option>
+          </select>
+        </label>
+
+        <div class="mini-card">
+          <p class="small">
+            Preguntate: <strong>¿Podría soltar esta necesidad?</strong>
+            Respondé con honestidad y seguí adelante.
+          </p>
+        </div>
+
+        <button type="button" class="button" data-action="objetivo-agregar-liberacion">
+          + Registrar liberación
+        </button>
+
+        <div id="objetivoLiberacionesLista"></div>
+      </div>
+
+      <div class="card">
+        <h3>¿Cómo te sentís ahora con el objetivo?</h3>
+        <div class="choice-group">
+          <button type="button" class="button small" data-objetivo-estado="coraje">Coraje</button>
+          <button type="button" class="button small secondary" data-objetivo-estado="aceptacion">Aceptación</button>
+          <button type="button" class="button small secondary" data-objetivo-estado="paz">Paz</button>
+          <button type="button" class="button small secondary" data-objetivo-estado="seguir_liberando">Seguir liberando</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <button type="button" class="button" data-action="objetivo-siguiente-actuar">
+          Siguiente → Proceso de actuar
+        </button>
+        <button type="button" class="button ghost" data-action="objetivo-volver-formulacion">
+          Volver
+        </button>
+      </div>
+    </section>
+
+    <!-- OBJETIVO: PASO 3 - ACTUAR -->
+    <section id="view-objetivo-actuar" class="view">
+      <div class="card">
+        <h2>Paso 3: Proceso de actuar</h2>
+        <p class="small">
+          Lista las acciones que crees que necesitás emprender.
+          Para cada una, liberá la resistencia antes de dar el paso.
+        </p>
+      </div>
+
+      <div class="card objetivo-resumen-card">
+        <h3>Tu objetivo:</h3>
+        <p id="objetivoActuarTexto" class="objetivo-texto-destacado"></p>
+      </div>
+
+      <div class="card">
+        <h3>Acciones necesarias</h3>
+        <div class="add-row">
+          <input id="objetivoAccionInput" placeholder="Ej: Enviar el CV, llamar al cliente..." />
+          <button type="button" data-action="objetivo-agregar-accion">+</button>
+        </div>
+        <div id="objetivoAccionesLista"></div>
+      </div>
+
+      <div class="card">
+        <button type="button" class="button" data-action="objetivo-siguiente-visualizar">
+          Siguiente → Visualización
+        </button>
+        <button type="button" class="button ghost" data-action="objetivo-volver-determinar">
+          Volver
+        </button>
+      </div>
+    </section>
+
+    <!-- OBJETIVO: PASO 4 - VISUALIZACIÓN -->
+    <section id="view-objetivo-visualizar" class="view">
+      <div class="card">
+        <h2>Paso 4: Visualización</h2>
+        <p class="small">
+          Imaginá vívidamente que ya lograste tu objetivo. Usá todos tus sentidos.
+          Si aparece resistencia o duda, liberala.
+        </p>
+      </div>
+
+      <div class="card objetivo-resumen-card">
+        <h3>Tu objetivo:</h3>
+        <p id="objetivoVisualizarTexto" class="objetivo-texto-destacado"></p>
+      </div>
+
+      <div class="card">
+        <h3>Visualización guiada</h3>
+        <div class="mini-card">
+          <p>
+            Cerrá los ojos un momento. Imaginá que ya lograste tu objetivo.
+          </p>
+          <ul>
+            <li>¿Qué ves?</li>
+            <li>¿Qué sentís en el cuerpo?</li>
+            <li>¿Qué escuchás?</li>
+            <li>¿Cómo es tu vida ahora que esto ya es real?</li>
+          </ul>
+        </div>
+
+        <label>
+          Describí tu visualización:
+          <textarea id="objetivoVisualizacionInput" placeholder="Ej: Me veo en mi nueva oficina, siento calma, escucho felicitaciones..." rows="4"></textarea>
+        </label>
+      </div>
+
+      <div class="card">
+        <h3>Objeciones o resistencias</h3>
+        <p class="small">
+          ¿Aparece algún pensamiento que diga "No puedo", "No lo merezco", "No es posible"?
+        </p>
+
+        <div class="add-row">
+          <input id="objetivoObjecionInput" placeholder="Ej: No voy a lograrlo, es muy difícil..." />
+          <button type="button" data-action="objetivo-agregar-objecion">+</button>
+        </div>
+        <div id="objetivoObjecionesLista"></div>
+      </div>
+
+      <div class="card">
+        <h3>Aceptación final</h3>
+        <div class="mini-card">
+          <p>
+            Permitite aceptar completamente esta imagen en tu conciencia.
+            Está bien tener lo que deseás. Te lo mereces.
+          </p>
+        </div>
+
+        <p class="miedo-pregunta">
+          ¿Podrías permitirte aceptar completamente que este objetivo se haga realidad?
+        </p>
+        <div class="choice-group">
+          <button type="button" class="button small" data-objetivo-acepta-visualizacion="si">Sí, lo acepto</button>
+          <button type="button" class="button small secondary" data-objetivo-acepta-visualizacion="un_poco">Un poco</button>
+          <button type="button" class="button small secondary" data-objetivo-acepta-visualizacion="todavia_no">Todavía no</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <button type="button" class="button" data-action="objetivo-guardar-completo">
+          Guardar objetivo completo
+        </button>
+        <button type="button" class="button ghost" data-action="objetivo-volver-actuar">
+          Volver
+        </button>
+      </div>
+    </section>
+
+    <!-- DIARIO -->
+    <section id="view-diario" class="view">
+      <div class="card">
+        <h2>Diario</h2>
+
+        <div id="diarioEstadisticas"></div>
+
+        <h3>Búsqueda y filtros</h3>
+        <div class="filter-bar">
+          <input id="filtroDiarioTexto" placeholder="Buscar en el diario..." />
+          <select id="filtroDiarioTema"></select>
+          <select id="filtroDiarioEmocion"></select>
+          <select id="filtroDiarioNecesidad"></select>
+          <select id="filtroDiarioTecnica"></select>
+          <button type="button" class="button ghost" data-action="limpiar-filtros-diario">Limpiar filtros</button>
+        </div>
+
+        <div id="listaSesiones"></div>
+      </div>
+    </section>
+
+    <!-- BENEFICIOS -->
+    <section id="view-beneficios" class="view">
+      <form id="formBeneficio" class="card">
+        <h2>Registrar beneficio</h2>
+
+        <label>
+          Beneficio
+          <input id="beneficioTexto" placeholder="Ej: dormí mejor" required />
+        </label>
+
+        <label>
+          Área
+          <select id="beneficioArea"></select>
+        </label>
+
+        <button type="submit" class="button">Guardar beneficio</button>
+      </form>
+
+      <div class="card">
+        <h2>Beneficios guardados</h2>
+        <div class="filter-bar">
+          <input id="filtroBeneficiosTexto" placeholder="Buscar beneficio..." />
+          <select id="filtroBeneficiosArea"></select>
+          <button type="button" class="button ghost" data-action="limpiar-filtros-beneficios">Limpiar filtros</button>
+        </div>
+        <div id="listaBeneficios"></div>
+      </div>
+    </section>
+
+    <!-- AJUSTES -->
+    <section id="view-ajustes" class="view">
+      <div class="card">
+        <h2>Ajustes</h2>
+        <p class="small">Las preferencias se guardan en este navegador.</p>
+
+        <div class="ajuste-item">
+          <p><strong>Modo oscuro</strong></p>
+          <button type="button" class="button" data-action="toggle-modo-oscuro">
+            Modo oscuro: <span id="modoOscuroEstado">apagado</span>
+          </button>
+        </div>
+
+        <div class="ajuste-item">
+          <p><strong>Recordatorio</strong></p>
+          <p class="small">
+            Mientras la app esté abierta, te avisa cada 30 minutos: "¿Cómo te sientes ahora?".
+          </p>
+          <button type="button" class="button secondary" data-action="toggle-recordatorio">
+            Recordatorio: <span id="recordatorioEstado">apagado</span>
+          </button>
+        </div>
+
+        <div class="ajuste-item">
+          <p><strong>Datos</strong></p>
+          <button type="button" class="button ghost" data-action="importar-datos">
+            Importar datos
+          </button>
+          <input type="file" id="importarDatosInput" accept="application/json,.json" hidden />
+        </div>
+
+        <div class="ajuste-item">
+          <p><strong>Zona de peligro</strong></p>
+          <button type="button" class="button danger" data-action="borrar-todos-datos">
+            Borrar todos los datos
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button type="button" data-view="inicio" class="active">Inicio</button>
+    <button type="button" data-view="liberar">Liberar</button>
+    <button type="button" data-view="tecnicas">Técnicas</button>
+    <button type="button" data-view="diario">Diario</button>
+    <button type="button" data-view="beneficios">Beneficios</button>
+  </nav>
+
+  <script src="js/data.js"></script>
+  <script src="js/tecnicas.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/ejercicios.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
